@@ -4,7 +4,7 @@
 - 独立した旅行用の静的Webアプリ。HTML/CSS/ES Modulesを使い、実行時の外部CDN、有料API、サーバーDBを追加しない。
 - iPhone Safari、ホーム画面起動、GitHub Pagesのサブディレクトリを想定。アセットは相対パスで参照する。
 - v0.1では写真、常時追跡、自動施設検索、複雑な自動マージを追加しない。未実装の操作を動作済みのように表示しない。
-- Step 1〜2に加え、Step 3（旅程JSON取込・予定追加編集削除）が承認済み。GPS・マップはStep 4、バックアップ・復元はStep 5として別途実装する。
+- Step 1〜4（旅程取込・予定編集・訪問登録編集・単発GPS・Maps URLs）が承認済み。バックアップ・復元はStep 5、Service Workerのオフライン対応は別途実装する。
 
 ## データ保護
 - 起動、更新、DB接続失敗を理由に既存データを削除・初期化しない。サンプル追加は利用者の明示操作のみ。
@@ -24,5 +24,5 @@
 
 ## 公開・外部操作
 - GitHubリポジトリ作成、push、GitHub Pages公開、その他の外部デプロイは、利用者の明示承認が必要。
-- 利用者はotake-kensuke/machiaruki-travelのPrivate管理とStep 3完了後のmainへのコミット・pushを承認済み。GitHub Pages公開・デプロイ、Sites登録・公開は未承認のため行わない。
+- 利用者はotake-kensuke/machiaruki-travelのPrivate管理とStep 4完了後のmainへのコミット・pushを承認済み。GitHub Pages公開・デプロイ、Sites登録・公開は未承認のため行わない。
 - サンプルには架空の予約と仮の訪問記録を明記し、実際の個人情報や予約番号を追跡対象ファイルへ入れない。

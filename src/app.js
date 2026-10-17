@@ -1,4 +1,4 @@
-import { emptyData, localDate, tripData } from './model.js';
+import { emptyData, localDate, tripData, journalDays } from './model.js';
 import { validateEnvelope } from './validation.js';
 import { loadWorkspace, addDataset } from './storage.js';
 import { el, route } from './ui.js';
@@ -7,6 +7,7 @@ import { timelineScreen } from './screens/timeline.js';
 import { reviewScreen } from './screens/review.js';
 import { openImportDialog } from './import-dialog.js';
 import { openPlanEditor, openPlanDelete } from './plan-dialog.js';
+import { openVisitEditor } from './visit-dialog.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
@@ -54,7 +55,7 @@ function render() {
   const params = new URLSearchParams(query || '');
   const trip = workspace.data.trips.find(item => item.id === params.get('trip')) || workspace.data.trips[0];
   const data = trip ? tripData(workspace.data, trip.id) : emptyData();
-  const days = [...data.days].sort((a, b) => a.date.localeCompare(b.date));
+  const days = journalDays(data, trip?.timeZone || 'Asia/Tokyo');
   const today = trip ? localDate(new Date(), trip.timeZone) : '';
   const date = days.find(day => day.date === params.get('date'))?.date || days.find(day => day.date === today)?.date || days[0]?.date || trip?.startDate || today;
   const context = {
@@ -62,7 +63,9 @@ function render() {
     sampleAvailable: !workspace.data.trips.some(item => item.id === sampleTripId),
     addPlan: () => openPlanEditor({ trip, data, date, onSaved: didSave }),
     editPlan: plan => openPlanEditor({ trip, data, date, plan, onSaved: didSave }),
-    removePlan: plan => openPlanDelete({ trip, data, plan, onSaved: didSave })
+    removePlan: plan => openPlanDelete({ trip, data, plan, onSaved: didSave }),
+    addVisit: plan => openVisitEditor({ trip, plan, onSaved: didSave }),
+    editVisit: visit => openVisitEditor({ trip, visit, onSaved: didSave })
   };
   const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
   content.replaceChildren(screen);

@@ -36,11 +36,20 @@ export function dateLabel(value, options = {}) {
 }
 
 export function timelineItems(data, date, timeZone) {
-  const visits = data.visits.filter(visit => localDate(visit.visitedAt, timeZone) === date);
+  const visits = data.visits.filter(visit => localDate(visit.visitedAt, timeZone) === date).sort((a, b) => Date.parse(a.visitedAt) - Date.parse(b.visitedAt));
   const plans = data.plans.filter(plan => !plan.deletedAt && data.days.some(day => day.id === plan.dayId && day.date === date));
   const rows = plans.map(plan => ({ plan, visits: visits.filter(visit => visit.planId === plan.id), sort: plan.startAt ? Date.parse(plan.startAt) : Infinity }));
   for (const visit of visits) {
     if (!plans.some(plan => plan.id === visit.planId)) rows.push({ plan: null, visits: [visit], sort: Date.parse(visit.visitedAt) });
   }
   return rows.sort((a, b) => a.sort - b.sort || (a.plan?.order ?? 0) - (b.plan?.order ?? 0));
+}
+
+export function journalDays(data, timeZone) {
+  const days = new Map(data.days.map(day => [day.date, day]));
+  for (const visit of data.visits) {
+    const date = localDate(visit.visitedAt, timeZone);
+    if (!days.has(date)) days.set(date, { date, title: 'この日の訪問記録' });
+  }
+  return [...days.values()].sort((a, b) => a.date.localeCompare(b.date));
 }

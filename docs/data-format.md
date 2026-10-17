@@ -27,7 +27,7 @@
 
 ## 共通ルール
 
-すべてのエンティティに、変更されない `id`、オフセット付きISO日時の `createdAt`・`updatedAt` を持たせます。IDは全コレクションを通じて一意です。サンプルは固定ID、通常データは今後 `crypto.randomUUID()` で作成します。
+すべてのエンティティに、変更されない `id`、オフセット付きISO日時の `createdAt`・`updatedAt` を持たせます。IDは全コレクションを通じて一意です。サンプルは固定ID、通常データは `crypto.randomUUID()` で作成します。
 
 日付は `YYYY-MM-DD`。日時は秒まで指定し、`Z` または `+09:00` などのオフセットを必須にします。日付ごとの表示は旅行の `timeZone` に従います。`memo` は任意の文字列です。
 
@@ -38,7 +38,7 @@
 | plans | tripId, dayId, startAt（日時またはnull）, name, category, address?, location, memo?, order（0以上の整数）, deletedAt?（日時またはnull） |
 | transportations | tripId, mode, name, from, to, departureAt, arrivalAt, memo? |
 | accommodations | tripId, name, address, checkInAt, checkOutAt, memo? |
-| visits | tripId, planId（IDまたはnull）, visitedAt, name, memo?, location, locationSource |
+| visits | tripId, planId（IDまたはnull）, visitedAt, name, address?, memo?, location, locationSource |
 
 `days` は同一旅行・日付に1件。予定の `dayId` は同じ旅行の日別データを参照し、時刻がある場合はその日付に一致させます。予定のcategoryは表示用の文字列で、サンプルは移動・散策・食事・観光です。
 
@@ -89,3 +89,19 @@ IndexedDB: `machiaruki-travel` / `workspace` / key `active`。
 - 日付は旅行期間内。予定の移動先の日別がなければ同じトランザクションで生成します。別の旅行への移動はできません。
 - フォームの時刻は端末のタイムゾーンに依存せず旅行のtimeZoneで解釈します。日時の変更がなければ元の秒・オフセットを保持します。夏時間で存在しない/二通りある時刻は拒否して別時刻を案内します。
 - 編集・削除の保存時に、画面を開いた時点の予定と現在の予定の内容を比較します。同じ予定が他のタブで変更・削除されていれば上書きせず、入力を保持してエラーを表示します。別の予定への変更は失いません。
+
+## Step 4の訪問記録・GPS・外部リンク
+
+- DBバージョン1、schemaVersion 1.0、6つのコレクションと既存レコードを維持します。訪問のaddressは任意の文字列で、従来のaddressがない記録もそのまま読み込めます。新規記録では予定の施設名・住所を初期入力にし、確認後に訪問側へ独立して保存します。
+- 予定からの記録はplanIdで関連付け、予定外はnullです。予定地点や予定メモをGPS実績へコピーしません。単発のGPSが失敗すればlocation=null、locationSource=noneで保存します。
+- visitedAtは実際の訪問日時です。開始時の現在時刻を初期値とし、旅行のtimeZoneで入力・編集します。時刻を変えなければ秒・ミリ秒も保持します。location.capturedAtはGPS側の取得日時で、visitedAtとは独立です。
+- getCurrentPositionは記録開始または利用者の明示再取得時のみ呼びます。enableHighAccuracy=true、maximumAge=0、timeout=12000ms。JavaScript側にも同じ期限を設け、許可待ち等でもUIは止めません。
+- 「内容を確認」で候補データと地点を固定します。確認・閉じる・再取得の後に届いた古い結果は無視します。単発API自体の中断やwatchPositionによる追跡は行いません。
+- 訪問編集はID・createdAt・tripId・planId・location・locationSourceを保持し、名称・日時・住所・メモだけ変更してupdatedAtを更新します。編集時は再測位しません。同じ記録が別タブで変更された場合は拒否します。
+- 新規訪問・編集とも最新データを読む同じIndexedDBトランザクションで検証・保存し、oncomplete後だけ成功表示します。保存エラーでは入力・確認候補を保持します。訪問の削除・全件置換APIは追加しません。
+- 入力中に元の予定が削除済みになっても、その予定が同じ旅行に存在していれば開始済みの訪問を関連付けて保存できます。参照先そのものがなければ保存せず入力を残します。
+- 旅行期間外の実際の訪問も許容します。日付切替は保存済みdaysと訪問日を合わせて表示し、daysデータ自体を改変しません。予定にない日の実績や削除済み予定の実績も表示します。
+- Maps URLsは固定のhttps://www.google.com/maps/search/へapi=1とqueryを渡します。座標があればその緯度経度、なければ訪問側の施設名・住所を使用します。予定側の地点・更新後の住所で過去の実績を代用しません。
+- URLは文字列をエンコードし、2048文字以内に収めます。ボタンを押した場合のみ外部へ開き、noopener/noreferrerを指定します。APIキー、地図埋込、自動施設名検索はありません。
+
+位置APIとリンクの仕様：[MDN getCurrentPosition](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition)、[Google Maps URLs](https://developers.google.com/maps/documentation/urls/get-started)。

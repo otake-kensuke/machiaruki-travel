@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node --test tests/model.test.js tests/step3.test.js",
+    "test": "node --test tests/model.test.js tests/step3.test.js tests/step4.test.js",
     "test:browser": "node tests/browser.mjs",
-    "test:step3": "node tests/step3-browser.mjs"
+    "test:step3": "node tests/step3-browser.mjs",
+    "test:step4": "node tests/step4-browser.mjs"
   }
 }

@@ -2,6 +2,7 @@ import { emptyData, SCHEMA_VERSION } from './model.js';
 import { DataError, validateData } from './validation.js';
 import { dataForAddition } from './transfer.js';
 import { applyPlanSave, applyPlanDelete } from './plans.js';
+import { applyVisitSave } from './visits.js';
 
 export const DB_NAME = 'machiaruki-travel';
 export const DB_VERSION = 1;
@@ -97,6 +98,12 @@ export async function savePlan(input, options = {}) {
 export async function deletePlan(planId, expectedPlan) {
   const expected = structuredClone(expectedPlan);
   return changeWorkspace(current => applyPlanDelete(current, planId, expected));
+}
+
+export async function saveVisit(input, options = {}) {
+  const values = structuredClone(input);
+  const expected = structuredClone(options);
+  return changeWorkspace(current => applyVisitSave(current, values, expected));
 }
 
 export function closeDatabase() {

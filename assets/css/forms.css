@@ -43,6 +43,18 @@
 .import-trip p { margin: 4px 0; }
 .preview-total { margin: 16px 0 0; font-weight: 600; }
 .hero-copy { min-width: 0; overflow-wrap: anywhere; }
+.form-dialog [hidden] { display: none !important; }
+.gps-panel { background: var(--soft); border-radius: 10px; padding: 16px; margin-top: 18px; }
+.gps-status { white-space: pre-line; overflow-wrap: anywhere; font-size: .85rem; }
+.gps-panel p { margin: 8px 0; }
+.visit-confirm { overflow-wrap: anywhere; }
+.visit-memo { white-space: pre-wrap; }
+.visit-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.visit-inline > .coordinates { display: block; margin-top: 12px; padding-top: 10px; }
+.visit-inline .visit-actions { align-items: stretch; gap: 8px; }
+.visit-actions .button { font-size: .73rem; padding: 9px 12px; }
+.timeline-time > small { display: block; font-size: .65rem; color: var(--muted); }
+.memory-card { overflow-wrap: anywhere; }
 main:focus { outline: none; }
 @media(max-width: 700px) {
   .home-actions { align-items: stretch; flex-direction: column; }

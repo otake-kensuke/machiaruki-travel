@@ -51,10 +51,11 @@ export function formDialog(title, eyebrow) {
   const form = el('form', {}, fields, error, el('div', { className: 'dialog-actions' }, cancel, submit));
   const dialog = el('dialog', { className: 'form-dialog', 'aria-labelledby': heading.id }, close, el('span', { className: 'eyebrow' }, eyebrow), heading, form);
   let busy = false;
-  const label = submit.textContent;
+  let label = submit.textContent;
   dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
   dialog.addEventListener('close', () => dialog.remove());
   function setBusy(value) {
+    if (value && !busy) label = submit.textContent;
     busy = value;
     fields.disabled = value;
     close.disabled = value;
