@@ -1,5 +1,7 @@
-import { emptyData, COLLECTIONS, SCHEMA_VERSION } from './model.js';
+import { emptyData, SCHEMA_VERSION } from './model.js';
 import { DataError, validateData } from './validation.js';
+import { dataForAddition } from './transfer.js';
+import { applyPlanSave, applyPlanDelete } from './plans.js';
 
 export const DB_NAME = 'machiaruki-travel';
 export const DB_VERSION = 1;
@@ -53,10 +55,8 @@ export async function loadWorkspace() {
   });
 }
 
-// Insert-only API. Read, collision check, validation and write share one transaction.
-export async function addDataset(incoming) {
-  validateData(incoming);
-  if (!incoming.trips.length) throw new DataError(['追加する旅行がありません。']);
+// Synchronous mutation inside the transaction prevents lost updates across tabs.
+async function changeWorkspace(change) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction('workspace', 'readwrite');
@@ -67,9 +67,9 @@ export async function addDataset(incoming) {
     request.onsuccess = () => {
       try {
         const current = decode(request.result);
-        const merged = Object.fromEntries(COLLECTIONS.map(key => [key, [...current.data[key], ...incoming[key]]]));
-        validateData(merged);
-        result = { schemaVersion: SCHEMA_VERSION, revision: current.revision + 1, updatedAt: new Date().toISOString(), data: merged };
+        const data = change(current.data);
+        validateData(data);
+        result = { schemaVersion: SCHEMA_VERSION, revision: current.revision + 1, updatedAt: new Date().toISOString(), data };
         store.put(result, 'active');
       } catch (error) {
         failure = error instanceof DataError ? error : new Error('端末への保存に失敗しました。空き容量やブラウザ設定を確認して再試行してください。既存データは変更していません。');
@@ -79,6 +79,24 @@ export async function addDataset(incoming) {
     transaction.oncomplete = () => resolve(result);
     transaction.onabort = transaction.onerror = () => reject(failure || new Error('端末への保存に失敗しました。空き容量やブラウザ設定を確認してください。既存データは変更していません。'));
   });
+}
+
+export async function addDataset(incoming) {
+  // Freeze the caller's input before the first await; the preview cannot change mid-save.
+  const data = structuredClone(incoming);
+  validateData(data);
+  return changeWorkspace(current => dataForAddition(current, data));
+}
+
+export async function savePlan(input, options = {}) {
+  const values = structuredClone(input);
+  const expected = structuredClone(options);
+  return changeWorkspace(current => applyPlanSave(current, values, expected));
+}
+
+export async function deletePlan(planId, expectedPlan) {
+  const expected = structuredClone(expectedPlan);
+  return changeWorkspace(current => applyPlanDelete(current, planId, expected));
 }
 
 export function closeDatabase() {

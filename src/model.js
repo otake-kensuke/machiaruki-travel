@@ -38,9 +38,9 @@ export function dateLabel(value, options = {}) {
 export function timelineItems(data, date, timeZone) {
   const visits = data.visits.filter(visit => localDate(visit.visitedAt, timeZone) === date);
   const plans = data.plans.filter(plan => !plan.deletedAt && data.days.some(day => day.id === plan.dayId && day.date === date));
-  const rows = plans.map(plan => ({ plan, visits: visits.filter(visit => visit.planId === plan.id), sort: plan.startAt || `${date}T23:59:59+09:00` }));
+  const rows = plans.map(plan => ({ plan, visits: visits.filter(visit => visit.planId === plan.id), sort: plan.startAt ? Date.parse(plan.startAt) : Infinity }));
   for (const visit of visits) {
-    if (!plans.some(plan => plan.id === visit.planId)) rows.push({ plan: null, visits: [visit], sort: visit.visitedAt });
+    if (!plans.some(plan => plan.id === visit.planId)) rows.push({ plan: null, visits: [visit], sort: Date.parse(visit.visitedAt) });
   }
-  return rows.sort((a, b) => new Date(a.sort) - new Date(b.sort) || (a.plan?.order ?? 0) - (b.plan?.order ?? 0));
+  return rows.sort((a, b) => a.sort - b.sort || (a.plan?.order ?? 0) - (b.plan?.order ?? 0));
 }

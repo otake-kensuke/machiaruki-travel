@@ -32,3 +32,38 @@ export function dateStrip(days, selected, page, tripId) {
 export function tripHeader(trip, title, subtitle) {
   return el('div', { className: 'page-heading' }, el('div', {}, el('span', { className: 'eyebrow' }, 'YOUR TRAVEL NOTE'), el('h1', {}, title), el('p', {}, subtitle)), trip.isSample && badge('サンプル・仮旅程', 'sample'));
 }
+
+export function actionButton(text, action, className = 'button') {
+  const button = el('button', { type: 'button', className }, text);
+  button.addEventListener('click', action);
+  return button;
+}
+
+// Dialog fields live outside the routed screen, so a refresh never erases a draft.
+export function formDialog(title, eyebrow) {
+  const heading = el('h2', { id: 'form-dialog-title' }, title);
+  const error = el('p', { className: 'error-text', role: 'alert', tabindex: '-1' });
+  const fields = el('fieldset', { className: 'dialog-fields' });
+  const close = actionButton('×', () => dialog.close(), 'dialog-close');
+  close.setAttribute('aria-label', '閉じる');
+  const cancel = actionButton('キャンセル', () => dialog.close(), 'button secondary');
+  const submit = el('button', { className: 'button', type: 'submit' }, '保存する');
+  const form = el('form', {}, fields, error, el('div', { className: 'dialog-actions' }, cancel, submit));
+  const dialog = el('dialog', { className: 'form-dialog', 'aria-labelledby': heading.id }, close, el('span', { className: 'eyebrow' }, eyebrow), heading, form);
+  let busy = false;
+  const label = submit.textContent;
+  dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+  dialog.addEventListener('close', () => dialog.remove());
+  function setBusy(value) {
+    busy = value;
+    fields.disabled = value;
+    close.disabled = value;
+    cancel.disabled = value;
+    submit.disabled = value;
+    submit.textContent = value ? '保存しています…' : label;
+    dialog.setAttribute('aria-busy', String(value));
+  }
+  function showError(value) { error.textContent = value.message || String(value); error.focus(); }
+  function open() { document.body.append(dialog); dialog.showModal(); }
+  return { dialog, form, fields, error, submit, setBusy, showError, open };
+}

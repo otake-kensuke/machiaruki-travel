@@ -5,6 +5,8 @@ import { el, route } from './ui.js';
 import { homeScreen } from './screens/home.js';
 import { timelineScreen } from './screens/timeline.js';
 import { reviewScreen } from './screens/review.js';
+import { openImportDialog } from './import-dialog.js';
+import { openPlanEditor, openPlanDelete } from './plan-dialog.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
@@ -29,6 +31,22 @@ function openSample() {
   dialog.showModal();
 }
 
+function didSave(result, tripId, date, message) {
+  workspace = result;
+  location.hash = route('timeline', tripId, date);
+  render();
+  showNotice(message);
+}
+
+function openImport() {
+  openImportDialog((result, tripId) => {
+    workspace = result;
+    location.hash = route('home', tripId);
+    render();
+    showNotice('旅程をこの端末に追加しました。既存データは保持しています。');
+  });
+}
+
 function render() {
   if (loading || failed) return;
   const [path, query] = location.hash.slice(1).split('?');
@@ -38,8 +56,14 @@ function render() {
   const data = trip ? tripData(workspace.data, trip.id) : emptyData();
   const days = [...data.days].sort((a, b) => a.date.localeCompare(b.date));
   const today = trip ? localDate(new Date(), trip.timeZone) : '';
-  const date = days.find(day => day.date === params.get('date'))?.date || days.find(day => day.date === today)?.date || days[0]?.date || today;
-  const context = { trip, data, date, openSample, savedAt: workspace.updatedAt, sampleAvailable: !workspace.data.trips.some(item => item.id === sampleTripId) };
+  const date = days.find(day => day.date === params.get('date'))?.date || days.find(day => day.date === today)?.date || days[0]?.date || trip?.startDate || today;
+  const context = {
+    trip, data, date, openSample, openImport, savedAt: workspace.updatedAt,
+    sampleAvailable: !workspace.data.trips.some(item => item.id === sampleTripId),
+    addPlan: () => openPlanEditor({ trip, data, date, onSaved: didSave }),
+    editPlan: plan => openPlanEditor({ trip, data, date, plan, onSaved: didSave }),
+    removePlan: plan => openPlanDelete({ trip, data, plan, onSaved: didSave })
+  };
   const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
   content.replaceChildren(screen);
   if (workspace.data.trips.length > 1) {
@@ -89,6 +113,7 @@ confirm.addEventListener('click', async () => {
   finally { saving = false; confirm.disabled = false; confirm.textContent = 'この端末に読み込む'; }
 });
 document.querySelector('#cancel-sample').addEventListener('click', () => { if (!saving) dialog.close(); });
+document.querySelector('.skip-link').addEventListener('click', event => { event.preventDefault(); content.focus(); });
 dialog.addEventListener('cancel', event => { if (saving) event.preventDefault(); });
 dialog.querySelector('form').addEventListener('submit', event => { if (saving) event.preventDefault(); });
 window.addEventListener('hashchange', () => { render(); content.focus({ preventScroll: true }); window.scrollTo(0, 0); });
@@ -96,4 +121,4 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 window.addEventListener('pageshow', event => { if (event.persisted) void refresh(); });
 await refresh();
 
-// No service worker is registered in Step 1–2. Offline caching is a later step.
+// No service worker is registered. Offline caching is a later step.

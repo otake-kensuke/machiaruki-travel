@@ -21,6 +21,7 @@ export function validateData(data) {
   const errors = [];
   if (!isObject(data)) throw new DataError(['dataはオブジェクトで指定してください。']);
   for (const key of COLLECTIONS) if (!Array.isArray(data[key])) errors.push(`${labels[key]}の一覧がありません。`);
+  for (const key of Object.keys(data)) if (!COLLECTIONS.includes(key)) errors.push(`dataの未対応項目「${key}」は取り込めません。`);
   if (errors.length) throw new DataError(errors);
   const ids = new Set();
   const validTimeZones = new Set();
@@ -34,7 +35,9 @@ export function validateData(data) {
       else if (ids.has(row.id)) errors.push(`${path}のID「${row.id}」が重複しています。`);
       else { ids.add(row.id); rowsByKey[key].set(row.id, row); }
       for (const field of ['createdAt', 'updatedAt']) if (!isTimestamp(row[field])) errors.push(`${path}の${field}が不正です。`);
+      if (isTimestamp(row.createdAt) && isTimestamp(row.updatedAt) && Date.parse(row.updatedAt) < Date.parse(row.createdAt)) errors.push(`${path}の更新日時が作成日時より前です。`);
       if (row.memo !== undefined && typeof row.memo !== 'string') errors.push(`${path}のメモは文字列で指定してください。`);
+      if (row.address !== undefined && typeof row.address !== 'string') errors.push(`${path}の住所は文字列で指定してください。`);
     });
   }
   function text(row, field, path) { if (!isText(row[field])) errors.push(`${path}の${field}が未入力です。`); }

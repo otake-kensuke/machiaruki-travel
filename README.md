@@ -1,6 +1,6 @@
 # 街歩きラボ｜旅行ノート v0.1
 
-北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。現在はStep 1〜2の実装です。GitHub Pages公開・デプロイは行っていません。
+北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜3を実装済みです。GitHub Pages公開・デプロイは行っていません。
 
 ## ローカル起動
 
@@ -26,6 +26,10 @@ node scripts/serve.mjs
 - 保存データの未知形式を初期化せず停止。既存データの自動上書き・削除機能はありません。
 - 旅行が複数ある場合の選択欄。通常の画面操作で旅行を新規作成する機能は未実装です。
 - ホーム画面向けマニフェスト、PNGアイコン、セーフエリアに配慮したレイアウト。
+- 旅行ホームから旅程JSONを選択し、旅行名・期間・日別/予定/交通/宿泊の件数を確認して追加。
+- 不正なJSON、未対応バージョン、バックアップ形式、既存ID衝突は保存せず拒否。取込の自動マージは行いません。
+- 日別予定画面から予定の追加・編集・確認付き削除。IDと作成日時を保持し、訪問記録は変更しません。
+- 別タブで同じ予定を変更した場合は上書きせずエラー。入力内容を残し、最新データの開き直しを案内。
 
 サンプルはすべて仮の設定で、予約情報や実際の訪問実績ではありません。仮訪問を含むため、サンプルJSONの外枠は `kind: "backup"` です。このボタンはアプリ同梱サンプルを追加する機能であり、利用者のバックアップファイルを復元する機能ではありません。
 
@@ -33,7 +37,7 @@ node scripts/serve.mjs
 
 DB名は `machiaruki-travel`、DB構造バージョンは `1`。`workspace` ストアの `active` キーに、データ・スキーマバージョン・リビジョンをまとめて保存します。v0.1の小規模な旅程では、この構造でコレクション間の整合性を保ちます。
 
-readwriteトランザクション内で最新データを取得し、追加データと結合・検証して保存します。成功は `transaction.oncomplete` 後に返します。サンプルは起動時に挿入しません。画面が再び表示されたときはDBを再読込します。
+readwriteトランザクション内で最新データを取得し、追加・編集・削除済み設定を検証して保存します。成功は `transaction.oncomplete` 後に返します。サンプルは起動時に挿入しません。画面が再び表示されたときはDBを再読込します。予定の削除は内部の削除済みフラグで行い、参照先と訪問記録を残します。
 
 端末保存は永久保存を保証しません。ブラウザデータを削除しないでください。バックアップが未実装の現在は、実旅行の記録を投入する段階ではありません。旅行名・メモ・位置情報の送信やアクセス解析は行いません。
 
@@ -42,20 +46,31 @@ readwriteトランザクション内で最新データを取得し、追加デ�
 データモデルのテスト（追加インストール不要）：
 
 ```powershell
-node --test tests/model.test.js
+node --test tests/model.test.js tests/step3.test.js
 ```
 
 ブラウザの統合テストは、起動済みサーバーとPlaywright、Microsoft Edgeが必要です。Playwrightが解決できる環境なら：
 
 ```powershell
 node tests/browser.mjs
+node tests/step3-browser.mjs
 ```
 
 別の場所にPlaywrightがある場合は、その `index.mjs` の絶対パスを `PLAYWRIGHT_MODULE` に指定してください。`BROWSER_CHANNEL`（既定 `msedge`）と `TEST_BASE_URL`（既定 `http://127.0.0.1:4173/`）も指定できます。テストは独立したブラウザコンテキストを使い、利用者の通常プロファイルには接続しません。スクリーンショットは無視対象の `test-results/` に出力します。
 
+## 旅程JSONの取込と予定編集
+
+1. 旅行ホームの「旅程JSONを取り込む」を押し、`kind: "itinerary"` のJSON（2 MiB以下）を選択します。
+2. 検証に成功すると、旅行名・期間・件数を表示します。この時点では保存されません。
+3. 「確認して追加する」で新しい旅行として追加します。保存時にも最新データとのID衝突を検査します。
+4. 「予定・記録」から日付を選び、「＋ 予定を追加」または各予定の「編集」「削除」を押します。
+
+施設名・日付・時刻（空欄可）・分類・住所・メモを入力できます。日付は旅行期間内、時刻は旅行に設定したタイムゾーンです。日付を変えても実際の訪問日時は変わりません。入力先の日別データがない場合は同じトランザクションで作成します。予定地点はJSONからの値を維持し、座標編集は現段階の入力画面に含めません。
+
+旅程の書式は [データ仕様](docs/data-format.md)、完全な例は `samples/hokkaido-2026.itinerary.json` を参照してください。この例は同梱サンプルと同じIDを使うため、サンプル読込済みなら衝突として拒否します。既存の旅行を更新するための再取込は対応せず、予定の変更は画面上で行います。
+
 ## 次の開発段階
 
-- Step 3：利用者ファイルからの旅程JSON取込・プレビュー、予定の追加・編集・削除。
 - Step 4：訪問の新規記録・編集、単発GPS取得、手入力、Googleマップ外部リンク。
 - Step 5：JSONバックアップ、置換対象の確認、復元前退避、全件復元。
 - オフライン：アプリ本体のService Workerキャッシュと更新制御。`sw.js` は予約ファイルで、現在は登録していません。
@@ -76,17 +91,26 @@ src/app.js                   起動・遷移・サンプル追加・エラー表
 src/model.js                 モデル・日時・表示用データ整形
 src/storage.js               IndexedDB・検証付き追加
 src/validation.js            データ・JSON外枠の検証
+src/transfer.js              旅程JSONの解析・追加可否検証
+src/import-dialog.js         ファイル選択・取込プレビュー
+src/plans.js                 予定変更・競合検出・旅行時刻変換
+src/plan-dialog.js           予定の追加編集・削除確認
 src/ui.js                    安全なDOM生成・共通表示
 src/screens/home.js          旅行ホーム
 src/screens/timeline.js      日別の予定・訪問記録
 src/screens/review.js        訪問履歴
 samples/hokkaido-2026.sample.json
+samples/hokkaido-2026.itinerary.json
+assets/css/forms.css         iPhone向け入力画面
 scripts/serve.mjs            依存不要のローカルHTTPサーバー
 tests/model.test.js          モデル・検証テスト
 tests/browser.mjs            実ブラウザの保存・表示テスト
+tests/step3.test.js           Step 3のモデル・取込テスト
+tests/step3-browser.mjs       Step 3の実ブラウザ検証
 docs/data-format.md          データ形式の仕様
 docs/test-checklist.md       実施結果と実機確認項目
+docs/step3-report.md          Step 3の実装・変更ファイル・検証結果
 package.json / .gitignore    開発用設定
 ```
 
-`transfer.js`・`geolocation.js`・`maps.js` はそれぞれの実装段階で追加します。
+`geolocation.js`・`maps.js` はStep 4で追加します。取込・予定編集の保存に成功しても、JSONバックアップを取得できるのはStep 5以降です。
