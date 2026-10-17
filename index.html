@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#244f45">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="街歩きラボ">
+  <meta name="description" content="旅の予定と、歩いた記憶をひとつに。端末に保存する旅行ノート。">
+  <title>街歩きラボ｜旅行ノート</title>
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./assets/css/app.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">本文へ移動</a>
+  <header class="site-header">
+    <a class="brand" href="#/home" aria-label="街歩きラボ ホーム"><span class="brand-icon" aria-hidden="true">歩</span><span>街歩きラボ<small>TRAVEL NOTE</small></span></a>
+    <span class="version">v0.1 <span>ローカル版</span></span>
+  </header>
+  <main id="content" tabindex="-1"><p class="loading" role="status">旅のノートを開いています…</p></main>
+  <footer class="site-footer">この端末に、旅の記憶を。<span>街歩きラボ / TRAVEL NOTE</span></footer>
+  <nav class="bottom-nav" aria-label="メインメニュー">
+    <a href="#/home" data-page="home"><span aria-hidden="true">⌂</span>旅行ホーム</a>
+    <a href="#/timeline" data-page="timeline"><span aria-hidden="true">☷</span>予定・記録</a>
+    <a href="#/review" data-page="review"><span aria-hidden="true">◇</span>振り返り</a>
+  </nav>
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  <dialog id="sample-dialog" aria-labelledby="sample-title">
+    <form method="dialog"><button class="dialog-close" aria-label="閉じる">×</button></form>
+    <span class="eyebrow">SAMPLE TRIP</span>
+    <h2 id="sample-title">北海道の旅を、試してみる。</h2>
+    <p>2026年10月30日〜11月1日の仮旅程です。交通・宿泊・訪問記録は表示確認用で、実際の予約や旅行実績ではありません。</p>
+    <div class="sample-summary"><span>3日間</span><span>8件の予定</span><span>2件の仮訪問</span></div>
+    <p class="muted">既存のデータは残したまま追加します。同じIDのデータがある場合は追加しません。</p>
+    <p id="sample-error" class="error-text" role="alert"></p>
+    <div class="dialog-actions"><button class="button secondary" id="cancel-sample" type="button">キャンセル</button><button class="button" id="confirm-sample" type="button">この端末に読み込む</button></div>
+  </dialog>
+  <noscript><p class="error-text">このアプリを利用するにはJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>

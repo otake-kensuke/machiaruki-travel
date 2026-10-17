@@ -1,0 +1,38 @@
+{
+  "appId": "machiaruki-travel",
+  "schemaVersion": "1.0",
+  "kind": "backup",
+  "exportedAt": "2026-10-17T12:00:00+09:00",
+  "data": {
+    "trips": [
+      { "id": "sample-trip-hokkaido-2026", "name": "秋の北海道、街を歩く。", "startDate": "2026-10-30", "endDate": "2026-11-01", "timeZone": "Asia/Tokyo", "memo": "札幌の街角から、小樽の運河へ。気になった場所に立ち止まる、3日間の旅。", "isSample": true, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ],
+    "days": [
+      { "id": "sample-day-1030", "tripId": "sample-trip-hokkaido-2026", "date": "2026-10-30", "title": "札幌に到着。街の空気にふれる。", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-day-1031", "tripId": "sample-trip-hokkaido-2026", "date": "2026-10-31", "title": "小樽の運河と、路地をゆっくり。", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-day-1101", "tripId": "sample-trip-hokkaido-2026", "date": "2026-11-01", "title": "朝の札幌を歩いて、帰り道へ。", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ],
+    "plans": [
+      { "id": "sample-plan-airport", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1030", "startAt": "2026-10-30T11:00:00+09:00", "name": "新千歳空港に到着", "category": "移動", "address": "北海道千歳市", "location": null, "memo": "到着後は札幌方面へ。時刻はサンプルです。", "order": 0, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-odori", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1030", "startAt": "2026-10-30T14:00:00+09:00", "name": "大通公園を散策", "category": "散策", "address": "札幌市中央区 大通西", "location": { "latitude": 43.0605, "longitude": 141.3509 }, "memo": "秋の景色を見ながら、街の中心を歩く。", "order": 1, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-dinner", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1030", "startAt": "2026-10-30T18:00:00+09:00", "name": "札幌で夕ごはん", "category": "食事", "address": "お店は当日決める", "location": null, "memo": "散策しながら気になったお店へ。", "order": 2, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-otaru", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1031", "startAt": "2026-10-31T10:00:00+09:00", "name": "小樽運河を歩く", "category": "散策", "address": "小樽市港町周辺", "location": { "latitude": 43.2009, "longitude": 141.0004 }, "memo": "運河沿いを歩いて、気になる路地にも寄り道。", "order": 0, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-lunch", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1031", "startAt": "2026-10-31T12:00:00+09:00", "name": "小樽でお昼ごはん", "category": "食事", "address": "小樽市内 / お店未定", "location": null, "memo": "混雑を見ながら、ゆっくり休憩。", "order": 1, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-sakaimachi", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1031", "startAt": "2026-10-31T14:00:00+09:00", "name": "堺町通りを散策", "category": "観光", "address": "小樽市堺町", "location": null, "memo": "ガラスのお店や歴史ある建物を眺める。", "order": 2, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-morning", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1101", "startAt": "2026-11-01T09:00:00+09:00", "name": "札幌の朝さんぽ", "category": "散策", "address": "札幌駅周辺", "location": null, "memo": "出発前に短い散歩。荷物を忘れずに。", "order": 0, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-plan-return", "tripId": "sample-trip-hokkaido-2026", "dayId": "sample-day-1101", "startAt": "2026-11-01T13:00:00+09:00", "name": "新千歳空港へ", "category": "移動", "address": "北海道千歳市", "location": null, "memo": "移動・搭乗時刻は仮の設定です。", "order": 1, "deletedAt": null, "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ],
+    "transportations": [
+      { "id": "sample-transport-outbound", "tripId": "sample-trip-hokkaido-2026", "mode": "飛行機", "name": "北海道へ / 往路（仮）", "from": "羽田", "to": "新千歳", "departureAt": "2026-10-30T09:30:00+09:00", "arrivalAt": "2026-10-30T11:00:00+09:00", "memo": "サンプル時刻・予約なし", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-transport-inbound", "tripId": "sample-trip-hokkaido-2026", "mode": "飛行機", "name": "帰り道 / 復路（仮）", "from": "新千歳", "to": "羽田", "departureAt": "2026-11-01T15:00:00+09:00", "arrivalAt": "2026-11-01T16:40:00+09:00", "memo": "サンプル時刻・予約なし", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ],
+    "accommodations": [
+      { "id": "sample-stay-1030", "tripId": "sample-trip-hokkaido-2026", "name": "札幌のホテル（仮） / 1泊目", "address": "札幌駅周辺を想定・施設未定", "checkInAt": "2026-10-30T16:00:00+09:00", "checkOutAt": "2026-10-31T09:00:00+09:00", "memo": "画面確認用の仮設定です。予約はありません。", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-stay-1031", "tripId": "sample-trip-hokkaido-2026", "name": "札幌のホテル（仮） / 2泊目", "address": "札幌駅周辺を想定・施設未定", "checkInAt": "2026-10-31T17:00:00+09:00", "checkOutAt": "2026-11-01T08:30:00+09:00", "memo": "画面確認用の仮設定です。予約はありません。", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ],
+    "visits": [
+      { "id": "sample-visit-odori", "tripId": "sample-trip-hokkaido-2026", "planId": "sample-plan-odori", "visitedAt": "2026-10-30T14:12:00+09:00", "name": "大通公園", "memo": "【仮の記録】ひんやりした空気と、色づきはじめた木々。少し遠回りして歩いた。", "location": { "latitude": 43.0605, "longitude": 141.3509 }, "locationSource": "manual", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" },
+      { "id": "sample-visit-cafe", "tripId": "sample-trip-hokkaido-2026", "planId": null, "visitedAt": "2026-10-31T11:15:00+09:00", "name": "路地の喫茶店（架空）", "memo": "【仮の記録】散歩の途中でひと休み。温かいコーヒーを飲みながら、次の行き先を相談。", "location": null, "locationSource": "none", "createdAt": "2026-10-17T12:00:00+09:00", "updatedAt": "2026-10-17T12:00:00+09:00" }
+    ]
+  }
+}

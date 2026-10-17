@@ -1,0 +1,40 @@
+# Dependencies and generated test/browser data
+node_modules/
+test-results/
+coverage/
+*.log
+
+# Credentials and machine-local settings
+.env
+.env.*
+!.env.example
+.aws/
+.ssh/
+.codex/
+.agents/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+*.local.*
+*.private.json
+*.personal.json
+
+# Personal trip exports and local backups (keep fictional samples tracked)
+backups/
+.backups/
+exports/
+local-data/
+*.backup.json
+*.bak
+machiaruki-travel-backup*.json
+backup-*.json
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
