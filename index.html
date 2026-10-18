@@ -21,6 +21,12 @@
     <a class="brand" href="#/home" aria-label="街歩きラボ ホーム"><span class="brand-icon" aria-hidden="true">歩</span><span>街歩きラボ<small>TRAVEL NOTE</small></span></a>
     <span class="version">v0.1 <span>ローカル版</span></span>
   </header>
+  <aside id="offline-panel" class="offline-panel" aria-label="通信とアプリ更新" data-state="preparing">
+    <p id="offline-status" role="status">オフライン対応を確認しています…</p>
+    <p id="connection-status" class="muted"></p>
+    <button id="offline-retry" type="button" class="button secondary">準備・更新を再確認</button>
+    <p class="muted">Googleマップを開くにはオンライン接続が必要です。端末内の記録はJSONでバックアップしてください。</p>
+  </aside>
   <main id="content" tabindex="-1"><p class="loading" role="status">旅のノートを開いています…</p></main>
   <footer class="site-footer">この端末に、旅の記憶を。<span>街歩きラボ / TRAVEL NOTE</span></footer>
   <nav class="bottom-nav" aria-label="メインメニュー">

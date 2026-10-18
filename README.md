@@ -1,6 +1,6 @@
 # 街歩きラボ｜旅行ノート v0.1
 
-北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜5を実装済みです。GitHub Pages公開・デプロイは行っていません。
+北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜5とStep 6A（オフライン対応）を実装済みです。GitHub Pages公開・デプロイは行っていません。
 
 ## ローカル起動
 
@@ -37,6 +37,8 @@ node scripts/serve.mjs
 - 全旅行・全6配列のJSONバックアップ、ダウンロードと対応端末でのファイル共有、最終出力操作日時の表示。
 - 通常の旅程追加から分離した全件復元。全件検証・置換プレビュー・復元前退避・利用者の保存確認を必須にします。
 - 復元途中の書込失敗は一括で巻き戻し、別タブ更新があれば置換を拒否します。直前の復元前データも端末内に1世代保持します。
+- 初回オンラインで必要ファイルをキャッシュし、以後はオフライン起動・予定閲覧/編集・訪問保存・JSON出力/復元に対応。
+- 同じ版のコードをキャッシュから利用し、新版は全アプリタブを閉じるまで待機。更新案内を表示し、入力中の強制再読込はしません。
 
 サンプルはすべて仮の設定で、予約情報や実際の訪問実績ではありません。仮訪問を含むため、サンプルJSONの外枠は `kind: "backup"` です。このボタンはアプリ同梱サンプルを追加する機能であり、利用者のバックアップファイルを復元する機能ではありません。
 
@@ -53,7 +55,7 @@ readwriteトランザクション内で最新データを取得し、追加・�
 データモデルのテスト（追加インストール不要）：
 
 ```powershell
-node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js
+node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js tests/step6a.test.js
 ```
 
 ブラウザの統合テストは、起動済みサーバーとPlaywright、Microsoft Edgeが必要です。Playwrightが解決できる環境なら：
@@ -63,9 +65,12 @@ node tests/browser.mjs
 node tests/step3-browser.mjs
 node tests/step4-browser.mjs
 node tests/step5-browser.mjs
+node tests/step6a-browser.mjs
 ```
 
 別の場所にPlaywrightがある場合は、その `index.mjs` の絶対パスを `PLAYWRIGHT_MODULE` に指定してください。`BROWSER_CHANNEL`（既定 `msedge`）と `TEST_BASE_URL`（既定 `http://127.0.0.1:4173/`）も指定できます。テストは独立したブラウザコンテキストを使い、利用者の通常プロファイルには接続しません。スクリーンショットは無視対象の `test-results/` に出力します。
+
+Step 6Aのテストは専用ローカルサーバーを自分で起動し、メモリ上で複数版・不完全更新を再現します。外部公開や本番コードの書き換えは行いません。
 
 ## 旅程JSONの取込と予定編集
 
@@ -111,10 +116,28 @@ GPSの取得待ちは最大12秒で表示を切り替えます。許可拒否や
 
 iPhone実機の共有画面・「ファイル」への保存・Safari/ホーム画面からの再読込は未検証です。PCのEdgeで実ダウンロードと復元を検証し、ファイル共有はモックで受渡し・キャンセル・失敗を確認しています。
 
+## オフラインで使う・アプリを更新する
+
+1. 最初はオンラインで開き、画面上部に「オフライン準備完了」と表示されるまで待ちます。保存済み旅程がなければ、旅程JSONまたは明示的なサンプル操作で追加してください。
+2. 同じURL・同じブラウザの保存領域で開き直すと、通信断でも起動して予定閲覧/編集、訪問記録、IndexedDB保存、JSONバックアップ/復元ができます。初回の準備に失敗した状態ではオフライン起動できません。
+3. GPSは従来どおり訪問開始時の単発取得です。通信断時の測位成功は保証できませんが、失敗しても施設名・日時・メモを座標なしで保存できます。Googleマップはオンライン依存と明示しています。
+4. 新版を検出すると「新しい版を準備できました」と表示します。入力を保存してから、このアプリの全タブ・ウィンドウ（Safariとホーム画面版を含む）を閉じて開き直してください。1タブだけ再読込しても旧版のままの場合があります。入力画面を強制的に切り替えません。
+5. 「準備・更新を再確認」でオンラインの更新確認と欠損キャッシュの再準備ができます。キャッシュ全体が消えて起動できない場合は、再準備専用画面から復旧します。新版のファイルが不完全なら切替を停止します。ブラウザデータの削除は不要です。
+
+キャッシュはアプリ本体と同梱の架空サンプルのみです。旅行データは引き続きIndexedDBに保存し、更新時に削除・初期化しません。キャッシュやIndexedDBはOS/ブラウザによって削除される場合があるため、オフライン対応後もJSONの外部ファイル保存が必要です。iPhone Safari・ホーム画面の機内モード起動やOS終了後の保持は実機未検証です。
+
+開発時は、アプリ本体・アセット・sw.js変更後に次を実行して、生成したsw.jsもコミットします。実行時のインストール/ビルドは不要です。
+
+```powershell
+node scripts/update-shell.mjs
+node scripts/update-shell.mjs --check
+```
+
+このスクリプトはアセットとworker本体の内容から版を生成します。各アセットはSHA-256（テキストはCRLFをLFへ正規化）で検証し、同じ版のキャッシュだけを使用します。サブディレクトリごとにキャッシュ名とscopeを分け、他アプリのキャッシュには触れません。詳細は [オフライン仕様と実装報告](docs/step6a-report.md)を参照してください。
+
 ## 次の開発段階
 
-- オフライン：アプリ本体のService Workerキャッシュと更新制御。`sw.js` は予約ファイルで、現在は登録していません。
-- Step 6：iPhone Safari実機・ホーム画面起動・GPS・JSONのファイル保存・通信断の確認。
+- iPhone Safari実機・ホーム画面起動・GPS・JSONのファイル保存・通信断・更新手順の確認。
 
 実機のホーム画面追加や保存領域の扱いは未検証です。サンプルを使って動作を確認してください。公開・デプロイは別途明示承認後に行います。
 
@@ -124,7 +147,7 @@ iPhone実機の共有画面・「ファイル」への保存・Safari/ホーム�
 AGENTS.md                    開発・データ保護・テスト・公開ルール
 index.html                   アプリの入口・サンプル確認ダイアログ
 manifest.webmanifest         ホーム画面向け設定
-sw.js                        オフライン実装用の予約（未登録）
+sw.js                        版と内容hash付きアプリキャッシュ・更新待機・再準備
 assets/css/app.css           PC・スマートフォンの表示
 assets/icons/                SVG、192/512px PNG、Apple用180px PNG
 src/app.js                   起動・遷移・サンプル追加・エラー表示
@@ -145,6 +168,7 @@ src/file-export.js           JSON Fileの準備・ダウンロード・共有
 src/backup-ui.js             出力日時・全件サマリー
 src/backup-dialog.js         全件出力・直前の退避コピー再出力
 src/restore-dialog.js        全件検証・退避・明示確認・復元
+src/offline.js               Service Worker登録・準備状況・更新案内
 src/ui.js                    安全なDOM生成・共通表示
 src/screens/home.js          旅行ホーム
 src/screens/timeline.js      日別の予定・訪問記録
@@ -153,6 +177,7 @@ samples/hokkaido-2026.sample.json
 samples/hokkaido-2026.itinerary.json
 assets/css/forms.css         iPhone向け入力画面
 scripts/serve.mjs            依存不要のローカルHTTPサーバー
+scripts/update-shell.mjs     sw.jsの内容hash・版の生成/検証（開発時のみ）
 tests/model.test.js          モデル・検証テスト
 tests/browser.mjs            実ブラウザの保存・表示テスト
 tests/step3.test.js           Step 3のモデル・取込テスト
@@ -161,12 +186,15 @@ tests/step4.test.js           訪問モデル・GPS・マップURLの16テスト
 tests/step4-browser.mjs       Step 4の20ブラウザ検証
 tests/step5.test.js           バックアップ形式・共有の11テスト
 tests/step5-browser.mjs       Step 5の23ブラウザ検証
+tests/step6a.test.js          キャッシュ内容hash・依存先の検証
+tests/step6a-browser.mjs      通信断・安全な更新・復旧のブラウザ検証
 docs/data-format.md          データ形式の仕様
 docs/test-checklist.md       実施結果と実機確認項目
 docs/step3-report.md          Step 3の実装・変更ファイル・検証結果
 docs/step4-report.md          Step 4の実装・変更ファイル・検証結果
 docs/step5-report.md          Step 5の実装・変更ファイル・検証結果
+docs/step6a-report.md         オフライン仕様・実装・検証結果
 package.json / .gitignore    開発用設定
 ```
 
-現在はService Workerを登録しません。機内モードでのアプリ起動は次段階の対応です。
+実旅行前に、利用するiPhoneの起動方法で旅程追加・オフライン記録・JSON保存/復元を確認してください。

@@ -4,7 +4,9 @@
 - 独立した旅行用の静的Webアプリ。HTML/CSS/ES Modulesを使い、実行時の外部CDN、有料API、サーバーDBを追加しない。
 - iPhone Safari、ホーム画面起動、GitHub Pagesのサブディレクトリを想定。アセットは相対パスで参照する。
 - v0.1では写真、常時追跡、自動施設検索、複雑な自動マージを追加しない。未実装の操作を動作済みのように表示しない。
-- Step 1〜5（旅程取込・予定編集・訪問登録編集・単発GPS・Maps URLs・JSONバックアップ/復元）が承認済み。Service Workerのオフライン対応は別途実装する。
+- Step 1〜5とStep 6A（Service Workerによるオフライン対応）が承認済み。実行時のビルドは不要とする。
+- アプリ本体・同梱アセット・Service Workerの変更後は `node scripts/update-shell.mjs` を実行し、`node scripts/update-shell.mjs --check` とテストで内容hash・依存先を確認してsw.jsを一緒にコミットする。
+- 新版は全ファイルの検証・キャッシュ完了後に待機。skipWaiting/clients.claimや入力中の強制再読込を追加しない。更新は入力保存後に全アプリタブ・ウィンドウを閉じて開き直す。
 
 ## データ保護
 - 起動、更新、DB接続失敗を理由に既存データを削除・初期化しない。サンプル追加は利用者の明示操作のみ。
@@ -24,5 +26,5 @@
 
 ## 公開・外部操作
 - GitHubリポジトリ作成、push、GitHub Pages公開、その他の外部デプロイは、利用者の明示承認が必要。
-- 利用者はotake-kensuke/machiaruki-travelのPrivate管理とStep 5完了後のmainへのコミット・pushを承認済み。GitHub Pages公開・デプロイ、Sites登録・公開は未承認のため行わない。
+- 利用者はotake-kensuke/machiaruki-travelのPrivate管理とStep 6A完了後のmainへのコミット・pushを承認済み。GitHub Pages公開・デプロイ、Sites登録・公開は未承認のため行わない。
 - サンプルには架空の予約と仮の訪問記録を明記し、実際の個人情報や予約番号を追跡対象ファイルへ入れない。

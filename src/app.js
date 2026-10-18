@@ -11,6 +11,7 @@ import { openVisitEditor } from './visit-dialog.js';
 import { openBackupDialog } from './backup-dialog.js';
 import { openRestoreDialog } from './restore-dialog.js';
 import { backupPanel } from './backup-ui.js';
+import { startOfflineSupport } from './offline.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
@@ -140,4 +141,4 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 window.addEventListener('pageshow', event => { if (event.persisted) void refresh(); });
 await refresh();
 
-// No service worker is registered. Offline caching is a later step.
+startOfflineSupport();

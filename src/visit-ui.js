@@ -7,7 +7,7 @@ export function visitActions(visit, editVisit) {
   const link = url && el('a', { className: 'button secondary small-button', href: url, target: '_blank', rel: 'noopener noreferrer', referrerpolicy: 'no-referrer' }, visit.location ? 'Googleマップで地点を開く' : 'Googleマップで施設を検索');
   const edit = actionButton('訪問記録を編集', () => editVisit(visit), 'button secondary small-button');
   edit.setAttribute('aria-label', `${visit.name}の訪問記録を編集`);
-  return el('div', { className: 'visit-actions' }, link, edit);
+  return el('div', { className: 'visit-actions' }, link, edit, url && el('small', { className: 'maps-network-note' }, 'Googleマップはオンライン接続が必要です。'));
 }
 
 export function visitCoordinates(visit, timeZone) {

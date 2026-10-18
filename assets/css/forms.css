@@ -71,6 +71,11 @@
 .form-dialog input[type=checkbox] { width: 22px; min-width: 22px; height: 22px; min-height: 22px; margin: 4px 0 0; padding: 0; accent-color: var(--green); }
 .previous-backup { border-top: 1px solid var(--line); margin-top: 25px; padding-top: 18px; }
 .previous-backup summary { cursor: pointer; font-weight: 600; }
+.offline-panel { max-width: 1160px; margin: 10px auto 0; padding: 14px 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); overflow-wrap: anywhere; }
+.offline-panel p { font-size: .8rem; margin: 6px 0; }
+.offline-panel .button { padding: 10px 14px; font-size: .8rem; margin: 6px 0; }
+.offline-panel[data-state=update], .offline-panel[data-state=error] { border-color: #a76b37; }
+.maps-network-note { flex-basis: 100%; color: var(--muted); font-size: .7rem; }
 main:focus { outline: none; }
 @media(max-width: 700px) {
   .home-actions { align-items: stretch; flex-direction: column; }

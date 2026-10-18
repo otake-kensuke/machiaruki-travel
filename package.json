@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js",
+    "test": "node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js tests/step6a.test.js",
     "test:browser": "node tests/browser.mjs",
     "test:step3": "node tests/step3-browser.mjs",
     "test:step4": "node tests/step4-browser.mjs",
-    "test:step5": "node tests/step5-browser.mjs"
+    "test:step5": "node tests/step5-browser.mjs",
+    "test:step6a": "node tests/step6a-browser.mjs",
+    "cache:update": "node scripts/update-shell.mjs",
+    "cache:check": "node scripts/update-shell.mjs --check"
   }
 }
