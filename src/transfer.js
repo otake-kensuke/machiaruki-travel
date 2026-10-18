@@ -18,7 +18,7 @@ export function parseItinerary(text, current) {
   let envelope;
   try { envelope = JSON.parse(text.replace(/^\uFEFF/, '')); }
   catch { throw new DataError(['JSONを読み取れません。括弧・引用符・カンマなどの形式を確認してください。']); }
-  if (envelope?.kind !== 'itinerary') throw new DataError(['旅程取込ではkindが「itinerary」のJSONを選択してください。バックアップの復元はStep 5で対応します。']);
+  if (envelope?.kind !== 'itinerary') throw new DataError(['旅程取込ではkindが「itinerary」のJSONを選択してください。バックアップは「バックアップから復元」を使ってください。']);
   const data = validateEnvelope(envelope);
   dataForAddition(current, data);
   return data;

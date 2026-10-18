@@ -1,6 +1,6 @@
 import { emptyData, localDate, tripData, journalDays } from './model.js';
 import { validateEnvelope } from './validation.js';
-import { loadWorkspace, addDataset } from './storage.js';
+import { loadWorkspace, addDataset, loadBackupStatus } from './storage.js';
 import { el, route } from './ui.js';
 import { homeScreen } from './screens/home.js';
 import { timelineScreen } from './screens/timeline.js';
@@ -8,6 +8,9 @@ import { reviewScreen } from './screens/review.js';
 import { openImportDialog } from './import-dialog.js';
 import { openPlanEditor, openPlanDelete } from './plan-dialog.js';
 import { openVisitEditor } from './visit-dialog.js';
+import { openBackupDialog } from './backup-dialog.js';
+import { openRestoreDialog } from './restore-dialog.js';
+import { backupPanel } from './backup-ui.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
@@ -18,6 +21,8 @@ let workspace = { data: emptyData(), updatedAt: null };
 let failed = false;
 let loading = true;
 let saving = false;
+let backupStatus = null;
+let backupHistoryError = false;
 
 function showNotice(text) {
   const notice = document.querySelector('#notice');
@@ -68,6 +73,15 @@ function render() {
     editVisit: visit => openVisitEditor({ trip, visit, onSaved: didSave })
   };
   const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
+  if (page === 'home') screen.insertBefore(backupPanel({
+    status: backupStatus, revision: workspace.revision, historyError: backupHistoryError,
+    openBackup: () => openBackupDialog(refresh),
+    openRestore: () => openRestoreDialog(result => {
+      workspace = result;
+      location.hash = '#/home';
+      render(); showNotice('全データを復元しました。直前のデータは退避コピーにも保持しています。');
+    }, refresh)
+  }), screen.children[1] || null);
   content.replaceChildren(screen);
   if (workspace.data.trips.length > 1) {
     const select = el('select', { id: 'trip-select' }, workspace.data.trips.map(item => el('option', { value: item.id }, item.name)));
@@ -85,6 +99,8 @@ function render() {
 async function refresh() {
   try {
     workspace = await loadWorkspace();
+    try { backupStatus = await loadBackupStatus(); backupHistoryError = false; }
+    catch { backupStatus = null; backupHistoryError = true; }
     loading = false;
     failed = false;
     render();

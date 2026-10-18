@@ -30,6 +30,7 @@ local-data/
 *.backup.json
 *.bak
 machiaruki-travel-backup*.json
+machiaruki-travel-before-restore*.json
 backup-*.json
 
 # Editor and OS files

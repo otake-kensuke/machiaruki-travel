@@ -55,6 +55,22 @@
 .visit-actions .button { font-size: .73rem; padding: 9px 12px; }
 .timeline-time > small { display: block; font-size: .65rem; color: var(--muted); }
 .memory-card { overflow-wrap: anywhere; }
+.backup-panel { margin: 22px 0; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.backup-panel > p { font-size: .84rem; margin: 12px 0 0; }
+.backup-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px 0; }
+.backup-actions > p { flex-basis: 100%; }
+.backup-summary { margin: 18px 0; padding: 16px; border-radius: 10px; background: var(--soft); overflow-wrap: anywhere; }
+.backup-summary h3 { margin-bottom: 8px; }
+.backup-summary p, .backup-summary li { font-size: .82rem; }
+.backup-summary p:last-child { margin-bottom: 0; }
+.backup-summary ul { margin: 8px 0 0; padding-left: 20px; }
+.backup-summary li span { display: block; color: var(--muted); }
+.backup-warning { color: #8b4330; font-weight: 600; }
+.backup-status, .backup-filename { font-size: .8rem; overflow-wrap: anywhere; white-space: pre-line; }
+.check-field { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; font-size: .85rem; cursor: pointer; }
+.form-dialog input[type=checkbox] { width: 22px; min-width: 22px; height: 22px; min-height: 22px; margin: 4px 0 0; padding: 0; accent-color: var(--green); }
+.previous-backup { border-top: 1px solid var(--line); margin-top: 25px; padding-top: 18px; }
+.previous-backup summary { cursor: pointer; font-weight: 600; }
 main:focus { outline: none; }
 @media(max-width: 700px) {
   .home-actions { align-items: stretch; flex-direction: column; }
@@ -64,4 +80,6 @@ main:focus { outline: none; }
   .form-row { gap: 10px; }
   .form-dialog .dialog-actions { margin-bottom: env(safe-area-inset-bottom); }
   .timeline-actions { gap: 10px; }
+  .backup-actions { flex-direction: column; align-items: stretch; }
+  .backup-panel { padding: 20px; }
 }
