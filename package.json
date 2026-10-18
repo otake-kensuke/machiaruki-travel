@@ -12,6 +12,8 @@
     "test:step5": "node tests/step5-browser.mjs",
     "test:step6a": "node tests/step6a-browser.mjs",
     "cache:update": "node scripts/update-shell.mjs",
-    "cache:check": "node scripts/update-shell.mjs --check"
+    "cache:check": "node scripts/update-shell.mjs --check",
+    "audit:publication": "node scripts/audit-publication.mjs",
+    "test:public": "node tests/public-site-browser.mjs"
   }
 }

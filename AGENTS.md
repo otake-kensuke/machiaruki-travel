@@ -26,5 +26,5 @@
 
 ## 公開・外部操作
 - GitHubリポジトリ作成、push、GitHub Pages公開、その他の外部デプロイは、利用者の明示承認が必要。
-- 利用者はotake-kensuke/machiaruki-travelのPrivate管理とStep 6A完了後のmainへのコミット・pushを承認済み。GitHub Pages公開・デプロイ、Sites登録・公開は未承認のため行わない。
+- 利用者はotake-kensuke/machiaruki-travelのPublic化とGitHub Pages公開（mainブランチのルート、HTTPS）、必要な変更のコミット・pushを明示承認済み。公開前に全ファイルとGit履歴を検査し、認証情報・実際の個人/予約情報が見つかれば公開を中止して報告する。Sites登録やその他の外部デプロイは未承認。
 - サンプルには架空の予約と仮の訪問記録を明記し、実際の個人情報や予約番号を追跡対象ファイルへ入れない。

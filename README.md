@@ -1,6 +1,8 @@
 # 街歩きラボ｜旅行ノート v0.1
 
-北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜5とStep 6A（オフライン対応）を実装済みです。GitHub Pages公開・デプロイは行っていません。
+北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜5とStep 6A（オフライン対応）を実装済みです。
+
+公開URL：[街歩きラボ](https://otake-kensuke.github.io/machiaruki-travel/)。Publicリポジトリのmainブランチ・ルートをGitHub Pagesで配信します。旅行・訪問記録は利用しているブラウザのIndexedDBへ保存し、GitHubへアップロードしません。同梱JSONは架空の予約なし旅程・仮訪問です。
 
 ## ローカル起動
 
@@ -139,7 +141,7 @@ node scripts/update-shell.mjs --check
 
 - iPhone Safari実機・ホーム画面起動・GPS・JSONのファイル保存・通信断・更新手順の確認。
 
-実機のホーム画面追加や保存領域の扱いは未検証です。サンプルを使って動作を確認してください。公開・デプロイは別途明示承認後に行います。
+実機のホーム画面追加や保存領域の扱いは未検証です。旅行前に、公開HTTPS URLを利用するiPhoneでサンプルとJSON保存・復元を確認してください。ローカル確認用URLと公開URLは別の保存領域です。実データの移行はJSONで行います。
 
 ## ファイル構成
 
@@ -178,6 +180,7 @@ samples/hokkaido-2026.itinerary.json
 assets/css/forms.css         iPhone向け入力画面
 scripts/serve.mjs            依存不要のローカルHTTPサーバー
 scripts/update-shell.mjs     sw.jsの内容hash・版の生成/検証（開発時のみ）
+scripts/audit-publication.mjs 全Gitオブジェクトと追跡ファイルの公開前検査
 tests/model.test.js          モデル・検証テスト
 tests/browser.mjs            実ブラウザの保存・表示テスト
 tests/step3.test.js           Step 3のモデル・取込テスト
@@ -188,12 +191,14 @@ tests/step5.test.js           バックアップ形式・共有の11テスト
 tests/step5-browser.mjs       Step 5の23ブラウザ検証
 tests/step6a.test.js          キャッシュ内容hash・依存先の検証
 tests/step6a-browser.mjs      通信断・安全な更新・復旧のブラウザ検証
+tests/public-site-browser.mjs 公開HTTPSサイトで架空データによる主要操作確認
 docs/data-format.md          データ形式の仕様
 docs/test-checklist.md       実施結果と実機確認項目
 docs/step3-report.md          Step 3の実装・変更ファイル・検証結果
 docs/step4-report.md          Step 4の実装・変更ファイル・検証結果
 docs/step5-report.md          Step 5の実装・変更ファイル・検証結果
 docs/step6a-report.md         オフライン仕様・実装・検証結果
+docs/publication-report.md   公開前検査・Pages設定・公開サイト検証結果
 package.json / .gitignore    開発用設定
 ```
 

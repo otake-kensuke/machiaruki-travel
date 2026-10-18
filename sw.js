@@ -1,7 +1,7 @@
 // Generated asset hashes are refreshed with: node scripts/update-shell.mjs
 // SHELL_MANIFEST_START
 const SHELL = {
-  "release": "5c2a9d87ad708e09707a",
+  "release": "455d429452d833467edb",
   "assets": [
     {
       "path": "./assets/css/app.css",
@@ -36,7 +36,7 @@ const SHELL = {
     {
       "path": "./index.html",
       "text": true,
-      "sha256": "7ad2c047dc639045a0c62c7737492bacabe2aef9b2b3f1f5c714578b55421d6b"
+      "sha256": "2c0ade2e694c25f8565c1caa7d633cddd0bdf0946bb222289c7aab1911ab23ec"
     },
     {
       "path": "./manifest.webmanifest",
