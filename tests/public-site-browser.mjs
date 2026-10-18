@@ -86,9 +86,12 @@ try {
       await page.setViewportSize({ width, height: 844 }); for (const screen of ['home', 'timeline', 'review']) { await go(screen); assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)); }
     }
     await go(); await page.screenshot({ path: 'test-results/public-mobile-home.png' });
-    assert.deepEqual(errors, []); assert.ok(requests.every(request => ['GET', 'HEAD'].includes(request.method) && request.body === null));
-    assert.ok(requests.every(request => request.url.startsWith(base) || request.url.startsWith('blob:')));
-    assert.ok(requests.every(request => !decodeURIComponent(request.url).includes('公開確認用の仮訪問')));
+    // Edge's download panel also emits local edge:// / chrome:// resource events.
+    // These are browser UI files; inspect every actual HTTP(S) network request here.
+    const network = requests.filter(request => ['http:', 'https:'].includes(new URL(request.url).protocol));
+    assert.deepEqual(errors, []); assert.ok(network.every(request => ['GET', 'HEAD'].includes(request.method) && request.body === null));
+    assert.deepEqual(network.filter(request => !request.url.startsWith(base)).map(request => ({ method: request.method, target: new URL(request.url).origin + new URL(request.url).pathname })), []);
+    assert.ok(network.every(request => new URL(request.url).search === '' && !decodeURIComponent(request.url).includes('公開確認用の仮訪問')));
   });
 } finally { await context.close(); await browser.close(); }
 console.log(`\n${checks.length} public HTTPS checks passed using fictional data in an isolated Edge context. Physical iPhone Safari is not tested.`);
