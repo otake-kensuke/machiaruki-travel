@@ -15,7 +15,7 @@ const sample = JSON.parse(original.get('samples/hokkaido-2026.sample.json').toSt
 const version = (id, changes = {}) => {
   const files = new Map(original);
   for (const [name, value] of Object.entries(changes)) files.set(name, Buffer.from(value));
-  const manifest = { release: id, assets: shell.assets.map(asset => ({ ...asset, sha256: createHash('sha256').update(asset.text ? files.get(asset.path.slice(2)).toString().replace(/\r\n/g, '\n') : files.get(asset.path.slice(2))).digest('hex') })) };
+  const manifest = { ...shell, release: id, assets: shell.assets.map(asset => ({ ...asset, sha256: createHash('sha256').update(asset.text ? files.get(asset.path.slice(2)).toString().replace(/\r\n/g, '\n') : files.get(asset.path.slice(2))).digest('hex') })) };
   files.set('sw.js', Buffer.from(workerSource.replace(pattern, `const SHELL = ${JSON.stringify(manifest)};`)));
   return files;
 };

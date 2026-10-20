@@ -1,8 +1,8 @@
-# 街歩きラボ｜旅行ノート v0.1
+# 街歩きラボ｜旅あるき v0.1
 
-北海道旅行（2026年10月30日〜）での試用を目指す、端末保存型の静的Webアプリ。Step 1〜5とStep 6A（オフライン対応）を実装済みです。
+旅行の予定と訪問記録を残す、端末保存型の静的Webアプリ。表示名は暫定「旅あるき」、プロジェクト名は「街歩きラボ」です。Step 1〜5・Step 6A・Step 7のUI改善を実装済みです。実際の北海道旅行は計画立案中で、同梱の旅程・予約・訪問は架空の確認用データです。デザインへ実際の旅行日程や訪問順を固定していません。
 
-公開URL：[街歩きラボ](https://otake-kensuke.github.io/machiaruki-travel/)。Publicリポジトリのmainブランチ・ルートをGitHub Pagesで配信します。旅行・訪問記録は利用しているブラウザのIndexedDBへ保存し、GitHubへアップロードしません。同梱JSONは架空の予約なし旅程・仮訪問です。
+公開URL：[旅あるき](https://otake-kensuke.github.io/machiaruki-travel/)。Publicリポジトリのmainブランチ・ルートをGitHub Pagesで配信します。旅行・訪問記録は利用しているブラウザのIndexedDBへ保存し、GitHubへアップロードしません。同梱JSONは架空の予約なし旅程・仮訪問です。
 
 ## ローカル起動
 
@@ -57,7 +57,7 @@ readwriteトランザクション内で最新データを取得し、追加・�
 データモデルのテスト（追加インストール不要）：
 
 ```powershell
-node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js tests/step6a.test.js
+node --test tests/model.test.js tests/step3.test.js tests/step4.test.js tests/step5.test.js tests/step6a.test.js tests/step7.test.js tests/publication-audit.test.js
 ```
 
 ブラウザの統合テストは、起動済みサーバーとPlaywright、Microsoft Edgeが必要です。Playwrightが解決できる環境なら：
@@ -68,11 +68,14 @@ node tests/step3-browser.mjs
 node tests/step4-browser.mjs
 node tests/step5-browser.mjs
 node tests/step6a-browser.mjs
+node tests/step7-browser.mjs
 ```
 
 別の場所にPlaywrightがある場合は、その `index.mjs` の絶対パスを `PLAYWRIGHT_MODULE` に指定してください。`BROWSER_CHANNEL`（既定 `msedge`）と `TEST_BASE_URL`（既定 `http://127.0.0.1:4173/`）も指定できます。テストは独立したブラウザコンテキストを使い、利用者の通常プロファイルには接続しません。スクリーンショットは無視対象の `test-results/` に出力します。
 
 Step 6Aのテストは専用ローカルサーバーを自分で起動し、メモリ上で複数版・不完全更新を再現します。外部公開や本番コードの書き換えは行いません。
+
+公開前監査は `node scripts/audit-publication.mjs --publication`。全ブランチ/タグの過去を含む履歴・HEAD・ステージ・追跡ファイルを検査し、Codexのローカル差分用treeや参照外のオブジェクトの検出は別欄に報告します。既定の `node scripts/audit-publication.mjs` は全ローカル検出を拒否する厳格なモードのままです。両者は公開範囲だけが異なり、実際にブランチの履歴へ入ったファイルは削除後も公開監査から外しません。
 
 ## 旅程JSONの取込と予定編集
 
@@ -120,11 +123,30 @@ iPhone実機の共有画面・「ファイル」への保存・Safari/ホーム�
 
 ## オフラインで使う・アプリを更新する
 
-1. 最初はオンラインで開き、画面上部に「オフライン準備完了」と表示されるまで待ちます。保存済み旅程がなければ、旅程JSONまたは明示的なサンプル操作で追加してください。
+1. 最初はオンラインで開き、画面下部の「オフライン確認」が「準備完了」になるまで待ちます。「詳しい状態・更新方法」で詳細を確認できます。保存済み旅程がなければ、旅程JSONまたは明示的なサンプル操作で追加してください。
 2. 同じURL・同じブラウザの保存領域で開き直すと、通信断でも起動して予定閲覧/編集、訪問記録、IndexedDB保存、JSONバックアップ/復元ができます。初回の準備に失敗した状態ではオフライン起動できません。
 3. GPSは従来どおり訪問開始時の単発取得です。通信断時の測位成功は保証できませんが、失敗しても施設名・日時・メモを座標なしで保存できます。Googleマップはオンライン依存と明示しています。
 4. 新版を検出すると「新しい版を準備できました」と表示します。入力を保存してから、このアプリの全タブ・ウィンドウ（Safariとホーム画面版を含む）を閉じて開き直してください。1タブだけ再読込しても旧版のままの場合があります。入力画面を強制的に切り替えません。
 5. 「準備・更新を再確認」でオンラインの更新確認と欠損キャッシュの再準備ができます。キャッシュ全体が消えて起動できない場合は、再準備専用画面から復旧します。新版のファイルが不完全なら切替を停止します。ブラウザデータの削除は不要です。
+
+## ホームの使い方と表示用素材
+
+ホームはメインビジュアル、保存済みの旅行名/期間、日数と件数、日別予定、旅行全体のコンパクトな日程、交通/宿泊の詳細、データ管理の順に表示します。「見る日を選ぶ」から登録済みの日付を切り替えられます。
+
+旅行中は旅行のタイムゾーンの今日を優先します。旅行前は最初の登録日、旅行後は最後の登録日を案内し、今日の日別登録がなければその旨を表示します。表示のための架空の日別データは保存しません。日数は旅行期間から、予定/訪問件数は保存データから計算します。交通/宿泊の「登録」は予約完了を意味せず、予約の有無は登録メモから確認します。
+
+背景は表示専用です。旅行名に「北海道」が含まれる場合は函館/札幌のイメージ、それ以外は地域を特定しない汎用背景を使います。背景は旅程・訪問順を表しません。3人のキャラクター、背景、HTMLの文字やボタンは別レイヤーです。[素材の出典と生成記録](assets/illustrations/README.md)を参照してください。
+
+表示名と背景パスは `src/brand.js` に集約しています。将来の名称変更は、同ファイルを編集して次を実行してください。DB名、appId、JSONファイル名の接頭辞は互換性のため変更しません。
+
+```powershell
+node scripts/update-brand.mjs
+node scripts/update-brand.mjs --check
+node scripts/update-shell.mjs
+node scripts/update-shell.mjs --check
+```
+
+PWAアイコンの図案は文字を含まないSVGです。図案を変更する場合はPlaywright/Edge環境で `node scripts/render-icons.mjs` を実行すると192/512/180pxのPNGを生成できます。iPhoneに追加済みの名称/アイコン更新は実機確認が必要です。
 
 キャッシュはアプリ本体と同梱の架空サンプルのみです。旅行データは引き続きIndexedDBに保存し、更新時に削除・初期化しません。キャッシュやIndexedDBはOS/ブラウザによって削除される場合があるため、オフライン対応後もJSONの外部ファイル保存が必要です。iPhone Safari・ホーム画面の機内モード起動やOS終了後の保持は実機未検証です。
 
@@ -151,8 +173,13 @@ index.html                   アプリの入口・サンプル確認ダイアロ
 manifest.webmanifest         ホーム画面向け設定
 sw.js                        版と内容hash付きアプリキャッシュ・更新待機・再準備
 assets/css/app.css           PC・スマートフォンの表示
+assets/css/journey.css       旅あるき共通配色・ホームダッシュボード
 assets/icons/                SVG、192/512px PNG、Apple用180px PNG
+assets/illustrations/        背景2種・透過キャラクター・出典/プロンプト
 src/app.js                   起動・遷移・サンプル追加・エラー表示
+src/brand.js                 表示名・表示用背景パス（DBとは独立）
+src/home-summary.js          登録済み日付からホームの表示を導出
+src/icons.js                 共通SVGアイコン
 src/model.js                 モデル・日時・表示用データ整形
 src/storage.js               IndexedDB・検証付き追加
 src/validation.js            データ・JSON外枠の検証
@@ -180,6 +207,8 @@ samples/hokkaido-2026.itinerary.json
 assets/css/forms.css         iPhone向け入力画面
 scripts/serve.mjs            依存不要のローカルHTTPサーバー
 scripts/update-shell.mjs     sw.jsの内容hash・版の生成/検証（開発時のみ）
+scripts/update-brand.mjs     HTML/PWA表示名の反映/検証
+scripts/render-icons.mjs     SVGからPWA用PNGを描画
 scripts/audit-publication.mjs 全Gitオブジェクトと追跡ファイルの公開前検査
 tests/model.test.js          モデル・検証テスト
 tests/browser.mjs            実ブラウザの保存・表示テスト
@@ -191,6 +220,8 @@ tests/step5.test.js           バックアップ形式・共有の11テスト
 tests/step5-browser.mjs       Step 5の23ブラウザ検証
 tests/step6a.test.js          キャッシュ内容hash・依存先の検証
 tests/step6a-browser.mjs      通信断・安全な更新・復旧のブラウザ検証
+tests/step7.test.js           今日/選択日の導出・日程非生成の8検証
+tests/step7-browser.mjs       UI・地域/日程変更・旧版互換更新の5検証
 tests/public-site-browser.mjs 公開HTTPSサイトで架空データによる主要操作確認
 docs/data-format.md          データ形式の仕様
 docs/test-checklist.md       実施結果と実機確認項目
@@ -199,6 +230,7 @@ docs/step4-report.md          Step 4の実装・変更ファイル・検証結�
 docs/step5-report.md          Step 5の実装・変更ファイル・検証結果
 docs/step6a-report.md         オフライン仕様・実装・検証結果
 docs/publication-report.md   公開前検査・Pages設定・公開サイト検証結果
+docs/step7-report.md          UI変更・互換性・実機確認項目
 package.json / .gitignore    開発用設定
 ```
 

@@ -1,4 +1,5 @@
 import { APP_ID, SCHEMA_VERSION, COLLECTIONS } from './model.js';
+import { BRAND } from './brand.js';
 
 export class DataError extends Error {
   constructor(errors) { super(errors.join('\n')); this.name = 'DataError'; this.errors = errors; }
@@ -112,7 +113,7 @@ export function validateData(data) {
 }
 
 export function validateEnvelope(value) {
-  if (!isObject(value) || value.appId !== APP_ID) throw new DataError(['街歩きラボのデータではありません。']);
+  if (!isObject(value) || value.appId !== APP_ID) throw new DataError([`${BRAND.name}のデータではありません。`]);
   if (value.schemaVersion !== SCHEMA_VERSION) throw new DataError(['未対応のスキーマバージョンです。既存データは変更しません。']);
   if (!['itinerary', 'backup'].includes(value.kind)) throw new DataError(['JSONの種類が不正です。']);
   if (!isTimestamp(value.exportedAt)) throw new DataError(['書き出し日時が不正です。']);

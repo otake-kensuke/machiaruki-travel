@@ -39,3 +39,6 @@ backup-*.json
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# User-provided device screenshots are local references, never publication assets.
+/20*_iOS.png

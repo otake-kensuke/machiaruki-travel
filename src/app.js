@@ -12,12 +12,15 @@ import { openBackupDialog } from './backup-dialog.js';
 import { openRestoreDialog } from './restore-dialog.js';
 import { backupPanel } from './backup-ui.js';
 import { startOfflineSupport } from './offline.js';
+import { BRAND } from './brand.js';
+import { icon } from './icons.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
 const confirm = document.querySelector('#confirm-sample');
 const sampleError = document.querySelector('#sample-error');
 const sampleTripId = 'sample-trip-hokkaido-2026';
+for (const anchor of document.querySelectorAll('[data-page]')) anchor.querySelector('span').replaceChildren(icon({ home: 'home', timeline: 'list', review: 'diamond' }[anchor.dataset.page]));
 let workspace = { data: emptyData(), updatedAt: null };
 let failed = false;
 let loading = true;
@@ -65,7 +68,7 @@ function render() {
   const today = trip ? localDate(new Date(), trip.timeZone) : '';
   const date = days.find(day => day.date === params.get('date'))?.date || days.find(day => day.date === today)?.date || days[0]?.date || trip?.startDate || today;
   const context = {
-    trip, data, date, openSample, openImport, savedAt: workspace.updatedAt,
+    trip, data, date, requestedDate: params.get('date'), openSample, openImport, savedAt: workspace.updatedAt,
     sampleAvailable: !workspace.data.trips.some(item => item.id === sampleTripId),
     addPlan: () => openPlanEditor({ trip, data, date, onSaved: didSave }),
     editPlan: plan => openPlanEditor({ trip, data, date, plan, onSaved: didSave }),
@@ -73,8 +76,7 @@ function render() {
     addVisit: plan => openVisitEditor({ trip, plan, onSaved: didSave }),
     editVisit: visit => openVisitEditor({ trip, visit, onSaved: didSave })
   };
-  const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
-  if (page === 'home') screen.insertBefore(backupPanel({
+  if (page === 'home') context.backupPanel = backupPanel({
     status: backupStatus, revision: workspace.revision, historyError: backupHistoryError,
     openBackup: () => openBackupDialog(refresh),
     openRestore: () => openRestoreDialog(result => {
@@ -82,19 +84,21 @@ function render() {
       location.hash = '#/home';
       render(); showNotice('全データを復元しました。直前のデータは退避コピーにも保持しています。');
     }, refresh)
-  }), screen.children[1] || null);
+  });
+  const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
   content.replaceChildren(screen);
   if (workspace.data.trips.length > 1) {
     const select = el('select', { id: 'trip-select' }, workspace.data.trips.map(item => el('option', { value: item.id }, item.name)));
     select.value = trip.id;
     select.addEventListener('change', () => { location.hash = route(page, select.value); });
-    content.prepend(el('div', { className: 'trip-picker' }, el('label', { for: 'trip-select' }, '旅行を選択'), select));
+    const picker = el('div', { className: 'trip-picker' }, el('label', { for: 'trip-select' }, '旅行を選択'), select);
+    if (page === 'home') screen.querySelector('[data-trip-picker]').append(picker); else content.prepend(picker);
   }
   for (const anchor of document.querySelectorAll('[data-page]')) {
     anchor.href = trip ? route(anchor.dataset.page, trip.id, date) : `#/${anchor.dataset.page}`;
     if (anchor.dataset.page === page) anchor.setAttribute('aria-current', 'page'); else anchor.removeAttribute('aria-current');
   }
-  document.title = `${{ home: '旅行ホーム', timeline: '今日の予定・訪問記録', review: '旅の振り返り' }[page]}｜街歩きラボ`;
+  document.title = `${{ home: '旅行ホーム', timeline: '今日の予定・訪問記録', review: '旅の振り返り' }[page]}｜${BRAND.name}`;
 }
 
 async function refresh() {
@@ -136,7 +140,15 @@ document.querySelector('#cancel-sample').addEventListener('click', () => { if (!
 document.querySelector('.skip-link').addEventListener('click', event => { event.preventDefault(); content.focus(); });
 dialog.addEventListener('cancel', event => { if (saving) event.preventDefault(); });
 dialog.querySelector('form').addEventListener('submit', event => { if (saving) event.preventDefault(); });
-window.addEventListener('hashchange', () => { render(); content.focus({ preventScroll: true }); window.scrollTo(0, 0); });
+window.addEventListener('hashchange', event => {
+  const [oldPage, oldQuery] = new URL(event.oldURL).hash.slice(1).split('?');
+  const [nextPage, nextQuery] = new URL(event.newURL).hash.slice(1).split('?');
+  const before = new URLSearchParams(oldQuery || ''); const after = new URLSearchParams(nextQuery || '');
+  const selectingHomeDay = oldPage === '/home' && nextPage === '/home' && before.get('trip') === after.get('trip') && before.get('date') !== after.get('date');
+  render();
+  if (selectingHomeDay) document.querySelector('#home-date')?.focus({ preventScroll: true });
+  else { content.focus({ preventScroll: true }); window.scrollTo(0, 0); }
+});
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !saving && !loading) void refresh(); });
 window.addEventListener('pageshow', event => { if (event.persisted) void refresh(); });
 await refresh();

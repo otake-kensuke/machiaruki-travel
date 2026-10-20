@@ -1,7 +1,8 @@
 // Generated asset hashes are refreshed with: node scripts/update-shell.mjs
 // SHELL_MANIFEST_START
 const SHELL = {
-  "release": "455d429452d833467edb",
+  "release": "26778abaed3576390403",
+  "appName": "旅あるき",
   "assets": [
     {
       "path": "./assets/css/app.css",
@@ -14,34 +15,54 @@ const SHELL = {
       "sha256": "56d34a7074cb0a0f3e91a03dee502e5632ae1d4b9aebf92ce97965dbb49d77fd"
     },
     {
+      "path": "./assets/css/journey.css",
+      "text": true,
+      "sha256": "84c99cbb947634478609e896a68e76ae8b5636e6269d7dbd5b17852366a0eaf4"
+    },
+    {
       "path": "./assets/icons/apple-touch-icon.png",
       "text": false,
-      "sha256": "0c65acc3227f1acf4afe8165f447e4400adf4042b3c51fddbc71f3e9027bc575"
+      "sha256": "0915c30c8f1a61aa3fa1288594a698ea5d5f8dd96373308169921db11746d843"
     },
     {
       "path": "./assets/icons/icon-192.png",
       "text": false,
-      "sha256": "d50cd32cf5df6f28562b8e01c64f0d7248871d0ccb84473719908e7f9436699d"
+      "sha256": "14cc05bf47a8b9b1511782c165d406cebe0a7578f6f3aa2fcf773e4c8dfe1d5c"
     },
     {
       "path": "./assets/icons/icon-512.png",
       "text": false,
-      "sha256": "dbdb771f986093a9f0e1512753d8476bb0b87cd0effe02f029c7a80798c4f1bd"
+      "sha256": "df5ba6b28a0e36244165c967f622a60c5305cdd09322494824275e924fcf050e"
     },
     {
       "path": "./assets/icons/icon.svg",
       "text": true,
-      "sha256": "3ac9b011b1b992ad9a0ba4771318c93b2dc2c501a8f84584da6ae8436d0aa3ec"
+      "sha256": "2eb902c0620d7cb6e07bc2214391b1b10e8191d915b4242c463435c147d8f36c"
+    },
+    {
+      "path": "./assets/illustrations/generic.png",
+      "text": false,
+      "sha256": "849ec00733110eb1042a14eecaf56825b3c006fd5c11daa0b2ed606179e003ae"
+    },
+    {
+      "path": "./assets/illustrations/hokkaido.png",
+      "text": false,
+      "sha256": "e8407d832e1eda53f5b9a14680be9e7ebe8d04999953abe3cfd36b02401e52c5"
+    },
+    {
+      "path": "./assets/illustrations/travelers.png",
+      "text": false,
+      "sha256": "cf90bc4104df13ddbbc11afaea705abd33f765b95e39ab6cbce0958ec5846ad9"
     },
     {
       "path": "./index.html",
       "text": true,
-      "sha256": "2c0ade2e694c25f8565c1caa7d633cddd0bdf0946bb222289c7aab1911ab23ec"
+      "sha256": "a376b9db552b8d78d3d78ef1bef397588b62116baf7b45583809b277f1d72b9e"
     },
     {
       "path": "./manifest.webmanifest",
       "text": true,
-      "sha256": "192db8afef698d4934328b3e811e8fc62712b58ed18ff2faa5a6504c580e0869"
+      "sha256": "fa97eeeba7c6c46bf1092543c85fcf2ff8196fb0ed6a542f9bc05641b6906b62"
     },
     {
       "path": "./samples/hokkaido-2026.itinerary.json",
@@ -56,7 +77,7 @@ const SHELL = {
     {
       "path": "./src/app.js",
       "text": true,
-      "sha256": "a50c78969fe97d7baf2452f743a1abcadafd363e3f678be73bcdb4f2f0b59b93"
+      "sha256": "f9dafc0dbdf6ae53f121e68692950d4067fc5362e8cf0e5a75f6ae7100214380"
     },
     {
       "path": "./src/backup-dialog.js",
@@ -74,14 +95,29 @@ const SHELL = {
       "sha256": "2368848a8c4339ff3e1bd9dc308aeb9c721f410f45e5ba351bad8b0083c383fd"
     },
     {
+      "path": "./src/brand.js",
+      "text": true,
+      "sha256": "f1af19122f050d127b65afd509e123caed5cdf2ede8349a5bb7531064dbb722b"
+    },
+    {
       "path": "./src/file-export.js",
       "text": true,
-      "sha256": "171f3b0ad47e6def091925d99c63cf372d651c2db672eb74017458eba4983a4d"
+      "sha256": "f8cdd69f5c4602aae0120004c793fd18afe8ac6cf7d9d22f522d8bc8ea0c0b36"
     },
     {
       "path": "./src/geolocation.js",
       "text": true,
       "sha256": "58baaf1e6e12941922dd3ddaa9b06dea2aee00ba669ebd2fef01e615c64a7c78"
+    },
+    {
+      "path": "./src/home-summary.js",
+      "text": true,
+      "sha256": "08c9c79fac98716da808429f046f49458831d9005c7048fd8705fb08d92bc37c"
+    },
+    {
+      "path": "./src/icons.js",
+      "text": true,
+      "sha256": "e450ebe82e55403bb7e849d6afc56d37b2f78f37ec12adf30f9ec51808c21692"
     },
     {
       "path": "./src/import-dialog.js",
@@ -101,7 +137,7 @@ const SHELL = {
     {
       "path": "./src/offline.js",
       "text": true,
-      "sha256": "af60da16b989c5b70d4f47756700c001c7dd065dfecf473331bc6af9ba998ab9"
+      "sha256": "6c213577aa967f7b4afbf2a6a1a5e3f1e1fbc471eb112b287c4e76f9b6433ffa"
     },
     {
       "path": "./src/plan-dialog.js",
@@ -121,7 +157,7 @@ const SHELL = {
     {
       "path": "./src/screens/home.js",
       "text": true,
-      "sha256": "8953428317013641f20ce7e0a5be79ddc956b73f05f5a9608fd77899fa9b94d0"
+      "sha256": "02fadceeef3f75969f1d220f9409b3bdda0010e720efe76fa915b1eb1436ec41"
     },
     {
       "path": "./src/screens/review.js",
@@ -151,7 +187,7 @@ const SHELL = {
     {
       "path": "./src/validation.js",
       "text": true,
-      "sha256": "f098bf8281786fa129ae4d648b3dcbe7b508d671b5108779646919bc4a3237b5"
+      "sha256": "efb5f3eaf23220a14d532f5ccf3a1c4a14c6834fd0108150150e9df6e5b6c122"
     },
     {
       "path": "./src/visit-dialog.js",
@@ -212,7 +248,7 @@ async function shellStatus() {
 function recoveryPage() {
   // This small page needs no cached module and can recover an evicted shell online.
   return new Response(`<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>街歩きラボ｜アプリの再準備</title><style>body{font:16px/1.8 sans-serif;max-width:40em;margin:40px auto;padding:20px;color:#244f45}button{font:inherit;padding:12px}p{overflow-wrap:anywhere}</style>
+    <title>${SHELL.appName}｜アプリの再準備</title><style>body{font:16px/1.8 sans-serif;max-width:40em;margin:40px auto;padding:20px;color:#165b4b}button{font:inherit;padding:12px}p{overflow-wrap:anywhere}</style>
     <h1>アプリのキャッシュが不足しています</h1><p>旅行・訪問記録のデータは削除していません。オンラインでアプリを再準備してください。ブラウザのデータ削除は不要です。</p>
     <button id="repair">オンラインで再準備する</button><p id="result" role="status"></p>
     <script>document.querySelector('#repair').onclick=async function(){this.disabled=true;const output=document.querySelector('#result');output.textContent='再準備しています…';try{

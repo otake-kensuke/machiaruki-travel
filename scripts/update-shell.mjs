@@ -2,6 +2,7 @@ import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { BRAND } from '../src/brand.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const marker = /\/\/ SHELL_MANIFEST_START[\s\S]*?\/\/ SHELL_MANIFEST_END/;
@@ -25,7 +26,7 @@ export async function generatedWorker() {
     return { path: `./${filename}`, text, sha256: digest(text ? normalized(raw.toString('utf8')) : raw) };
   }));
   const release = digest(template.replace(marker, '// SHELL_MANIFEST') + JSON.stringify(assets)).slice(0, 20);
-  const block = `// SHELL_MANIFEST_START\nconst SHELL = ${JSON.stringify({ release, assets }, null, 2)};\n// SHELL_MANIFEST_END`;
+  const block = `// SHELL_MANIFEST_START\nconst SHELL = ${JSON.stringify({ release, appName: BRAND.name, assets }, null, 2)};\n// SHELL_MANIFEST_END`;
   return template.replace(marker, block);
 }
 

@@ -199,7 +199,8 @@ try {
     await page.reload();
     await page.getByRole('heading', { name: malicious.trips[0].name, exact: true }).waitFor();
     assert.equal(await page.evaluate(() => window.injected), undefined);
-    assert.equal(await page.locator('main img, main script').count(), 0);
+    assert.equal(await page.locator('main img:not(.scenery-image), main script, .trip-intro img').count(), 0);
+    assert.equal(await page.locator('main img.scenery-image[src="./assets/illustrations/generic.png"]').count(), 1);
   });
   await check('GitHub Pages相当のサブパスでも起動・保存できる', async () => {
     const isolated = await browser.newContext(); const tab = await isolated.newPage();

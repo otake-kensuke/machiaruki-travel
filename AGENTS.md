@@ -5,6 +5,8 @@
 - iPhone Safari、ホーム画面起動、GitHub Pagesのサブディレクトリを想定。アセットは相対パスで参照する。
 - v0.1では写真、常時追跡、自動施設検索、複雑な自動マージを追加しない。未実装の操作を動作済みのように表示しない。
 - Step 1〜5とStep 6A（Service Workerによるオフライン対応）が承認済み。実行時のビルドは不要とする。
+- Step 7の表示名「旅あるき」とUI/UX改修が承認済み。プロジェクト名・公開URL・DB名・appId・データスキーマを維持し、実際の北海道旅行の確定日程を推測しない。サンプルは架空のまま保持する。
+- 表示名と背景パスはsrc/brand.jsへ集約。名称変更時は `node scripts/update-brand.mjs` と `--check` を実行し、PWA/HTML/workerの表示をそろえる。背景・キャラクター・UIは別レイヤーとし、元の3人を別人へ置き換えない。
 - アプリ本体・同梱アセット・Service Workerの変更後は `node scripts/update-shell.mjs` を実行し、`node scripts/update-shell.mjs --check` とテストで内容hash・依存先を確認してsw.jsを一緒にコミットする。
 - 新版は全ファイルの検証・キャッシュ完了後に待機。skipWaiting/clients.claimや入力中の強制再読込を追加しない。更新は入力保存後に全アプリタブ・ウィンドウを閉じて開き直す。
 

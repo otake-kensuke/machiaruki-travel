@@ -1,4 +1,5 @@
 import { backupFilename, serializeBackup } from './backups.js';
+import { BRAND } from './brand.js';
 
 export function prepareBackupFile(envelope, purpose = 'backup') {
   const text = serializeBackup(envelope);
@@ -15,7 +16,7 @@ export function canShareFile(prepared, navigatorObject = globalThis.navigator) {
 // Called directly from a button handler, with the File already prepared.
 export function shareBackupFile(prepared, navigatorObject = globalThis.navigator) {
   if (!canShareFile(prepared, navigatorObject)) throw new Error('ファイル共有に対応していません。JSONのダウンロードを利用してください。');
-  return navigatorObject.share({ files: [prepared.file], title: '街歩きラボのバックアップ' });
+  return navigatorObject.share({ files: [prepared.file], title: `${BRAND.name}のバックアップ` });
 }
 
 export function downloadBackupFile(prepared) {
