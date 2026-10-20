@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile, mkdir } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { BRAND } from '../src/brand.js';
 
 const base = 'https://otake-kensuke.github.io/machiaruki-travel/';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
@@ -37,6 +38,9 @@ try {
   await check('HTTPSのサブディレクトリで初回起動・データ未初期化・オフライン準備', async () => {
     const response = await page.goto(base); assert.equal(response.status(), 200); assert.equal(new URL(page.url()).protocol, 'https:');
     await page.locator('#offline-panel[data-state=ready]').waitFor(); assert.equal((await state()).revision, 0);
+    assert.ok((await page.title()).endsWith(`｜${BRAND.name}`));
+    assert.equal(await page.locator('.brand [data-brand-name]').innerText(), BRAND.name);
+    const manifest = await page.evaluate(() => fetch('./manifest.webmanifest').then(response => response.json())); assert.equal(manifest.short_name, BRAND.name);
     const scope = await page.evaluate(async () => (await navigator.serviceWorker.ready).scope); assert.equal(scope, base);
   });
   await check('明示サンプル追加・旅行ホーム・予定と実績・振り返り', async () => {

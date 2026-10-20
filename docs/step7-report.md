@@ -41,7 +41,7 @@ DB名machiaruki-travel、DBバージョン1、workspaceストア、全6配列、
 - 全ローカルGitオブジェクトの監査では、Codexのローカル差分用treeにある12枚のiPhone画像のメタデータを検出しました。main/ブランチ/タグの全履歴とステージからは参照されていないことを確認し、画像を削除・公開せず除外しています。公開対象の全履歴/HEAD/ステージ/追跡ファイルは `--publication` で検査し、ローカルのみの検出も別欄で報告します。既定の全ローカル監査は引き続きこれらを警告します。
 - 監査の2テストでは、Codexローカルtreeと公開履歴の区別、およびmainに入った画像・同じblobの別名ファイルを削除後も履歴から検出することを確認しました。ブランチ履歴に入ったファイルをローカル専用扱いで除外しません。
 
-GitHub Pages上の最終結果とコミットIDはPush後の完了報告に記載します。公開URLは従来のままです。
+GitHub Pagesは従来の [公開URL](https://otake-kensuke.github.io/machiaruki-travel/) を維持。UIコミット `211b2fe` がmain/ルート・HTTPSでbuiltになったことを確認しました。公開サイトのEdge検証8項目も成功し、旅あるきのHTML/PWA名、3画面、JSON取込、編集/訪問保存、実バックアップ/退避/復元、オフライン起動/再起動/オンライン復帰を確認しています。公開先の40アセットとService Workerの内容hashが一致し、キャッシュ版は `26778abaed3576390403` です。実機Safariの確認ではありません。検証記録の最終コミットIDとローカル/GitHub/Pagesの照合結果は完了報告に記載します。
 
 ## 変更ファイル
 
@@ -63,6 +63,7 @@ GitHub Pages上の最終結果とコミットIDはPush後の完了報告に記�
 | scripts/audit-publication.mjs / tests/publication-audit.test.js | 全ローカル監査を維持し公開履歴/ステージの判定を追加。ローカル専用画像の診断を分離し、過去に公開refへ入ったファイルは削除後も拒否 |
 | tests/step7.test.js / step7-browser.mjs（新規） | 日付・可変旅程・表示・旧公開版からの互換更新 |
 | tests/browser.mjs / step6a-browser.mjs | 固定装飾画像の検査、キャッシュの表示名を含めた更新fixture |
+| tests/public-site-browser.mjs | 公開サイトの表示名とPWA名も検証 |
 | package.json | 追加テスト/名称/アイコン生成コマンド |
 | docs/test-checklist.md / step7-report.md | 検証結果・実機確認事項 |
 
