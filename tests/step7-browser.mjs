@@ -9,6 +9,7 @@ import { BRAND } from '../src/brand.js';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
 const launch = { channel: process.env.BROWSER_CHANNEL || 'msedge', headless: true };
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:4173/';
+const legacyRef = process.env.UPGRADE_FROM_REF || '5134eaa';
 const sample = JSON.parse(await readFile(new URL('../samples/hokkaido-2026.sample.json', import.meta.url), 'utf8'));
 const browser = await chromium.launch(launch); const errors = []; const checks = [];
 await mkdir(new URL('../test-results/', import.meta.url), { recursive: true });
@@ -56,9 +57,10 @@ try {
   });
   await check('旧公開版から更新しても全DBキー・ID・訪問・出力履歴を維持', async () => {
     const git = args => { const result = spawnSync('git', args, { maxBuffer: 32 * 1024 * 1024 }); if (result.status !== 0) throw new Error('Legacy fixture read failed'); return result.stdout; };
-    const legacyWorker = git(['show', '5134eaa:sw.js']); const oldShell = JSON.parse(legacyWorker.toString().match(/const SHELL = (\{[\s\S]*?\});/)[1]);
+    const legacyWorker = git(['show', `${legacyRef}:sw.js`]); const oldShell = JSON.parse(legacyWorker.toString().match(/const SHELL = (\{[\s\S]*?\});/)[1]);
     const currentWorker = await readFile(new URL('../sw.js', import.meta.url)); const currentShell = JSON.parse(currentWorker.toString().match(/const SHELL = (\{[\s\S]*?\});/)[1]);
-    const legacy = new Map(oldShell.assets.map(asset => [asset.path.slice(2), git(['show', `5134eaa:${asset.path.slice(2)}`])])); legacy.set('sw.js', legacyWorker);
+    const legacy = new Map(oldShell.assets.map(asset => [asset.path.slice(2), git(['show', `${legacyRef}:${asset.path.slice(2)}`])])); legacy.set('sw.js', legacyWorker);
+    const oldName = JSON.parse(legacy.get('manifest.webmanifest').toString()).short_name;
     const current = new Map(await Promise.all(currentShell.assets.map(async asset => [asset.path.slice(2), await readFile(new URL(`../${asset.path}`, import.meta.url))]))); current.set('sw.js', currentWorker);
     let files = legacy; const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json' };
     const server = createServer((request, response) => { const pathname = new URL(request.url, 'http://localhost').pathname; const file = pathname === '/' ? 'index.html' : pathname.slice(1); const bytes = files.get(file); if (!bytes) { response.writeHead(404); response.end(); return; } response.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'text/plain', 'Cache-Control': 'no-store' }); response.end(bytes); });
@@ -68,7 +70,7 @@ try {
       await page.goto(url); await page.locator('#offline-panel[data-state=ready]').waitFor(); await seed(page);
       await page.evaluate(async () => { const storage = await import('./src/storage.js'); const data = (await storage.loadWorkspace()).data; await storage.saveVisit({ tripId: data.trips[0].id, planId: data.plans[0].id, name: '旧版からの仮記録', address: '', memo: '更新互換性テスト', visitedAt: '2026-10-30T12:00:00+09:00', location: null, locationSource: 'none' }); });
       await page.getByRole('button', { name: 'バックアップを保存', exact: true }).click(); const backup = await download(page); await page.getByRole('button', { name: 'キャンセル', exact: true }).click(); const before = await allKeys(page);
-      files = current; await page.locator('#offline-retry').click(); await page.locator('#offline-panel[data-state=update]').waitFor(); assert.match(await page.title(), /街歩きラボ/); assert.deepEqual(await allKeys(page), before);
+      files = current; await page.locator('#offline-retry').click(); await page.locator('#offline-panel[data-state=update]').waitFor(); assert.ok((await page.title()).includes(oldName)); assert.deepEqual(await allKeys(page), before);
       await page.close(); page = await ctx.newPage(); await page.goto(url); await page.locator('#offline-panel[data-state=ready]').waitFor(); assert.match(await page.title(), /旅あるき/); assert.deepEqual(await allKeys(page), before);
       await page.getByRole('button', { name: 'バックアップを保存', exact: true }).click(); const afterBackup = await download(page); assert.deepEqual(afterBackup.data, backup.data); assert.equal(afterBackup.appId, backup.appId); assert.equal(afterBackup.schemaVersion, backup.schemaVersion); await page.getByRole('button', { name: 'キャンセル', exact: true }).click();
       await ctx.setOffline(true); await page.close(); page = await ctx.newPage(); await page.goto(`${url}#/review`); await page.getByRole('heading', { name: '旧版からの仮記録', exact: true }).waitFor(); assert.deepEqual((await state(page)).data, backup.data);

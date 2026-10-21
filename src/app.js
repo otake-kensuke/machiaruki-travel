@@ -14,6 +14,7 @@ import { backupPanel } from './backup-ui.js';
 import { startOfflineSupport } from './offline.js';
 import { BRAND } from './brand.js';
 import { icon } from './icons.js';
+import { centerSelectedDate } from './date-strip-scroll.js';
 
 const content = document.querySelector('#content');
 const dialog = document.querySelector('#sample-dialog');
@@ -86,7 +87,10 @@ function render() {
     }, refresh)
   });
   const screen = { home: homeScreen, timeline: timelineScreen, review: reviewScreen }[page](context);
+  const oldStrip = content.querySelector('.date-strip');
+  const previousDatePosition = oldStrip && { left: oldStrip.scrollLeft, selected: oldStrip.querySelector('[aria-current="date"]')?.getAttribute('href') };
   content.replaceChildren(screen);
+  centerSelectedDate(content.querySelector('.date-strip'), previousDatePosition);
   if (workspace.data.trips.length > 1) {
     const select = el('select', { id: 'trip-select' }, workspace.data.trips.map(item => el('option', { value: item.id }, item.name)));
     select.value = trip.id;
@@ -144,7 +148,10 @@ window.addEventListener('hashchange', event => {
   const [oldPage, oldQuery] = new URL(event.oldURL).hash.slice(1).split('?');
   const [nextPage, nextQuery] = new URL(event.newURL).hash.slice(1).split('?');
   const before = new URLSearchParams(oldQuery || ''); const after = new URLSearchParams(nextQuery || '');
-  const selectingHomeDay = oldPage === '/home' && nextPage === '/home' && before.get('trip') === after.get('trip') && before.get('date') !== after.get('date');
+  // The initial home can have no hash/trip parameter. Enlarged text may put its
+  // date picker below the fold; keep that first selection in place too.
+  const displayedTrip = params => workspace.data.trips.find(trip => trip.id === params.get('trip'))?.id || workspace.data.trips[0]?.id;
+  const selectingHomeDay = (!oldPage || oldPage === '/home') && nextPage === '/home' && displayedTrip(before) === displayedTrip(after) && before.get('date') !== after.get('date');
   render();
   if (selectingHomeDay) document.querySelector('#home-date')?.focus({ preventScroll: true });
   else { content.focus({ preventScroll: true }); window.scrollTo(0, 0); }

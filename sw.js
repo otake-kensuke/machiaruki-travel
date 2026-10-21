@@ -1,7 +1,7 @@
 // Generated asset hashes are refreshed with: node scripts/update-shell.mjs
 // SHELL_MANIFEST_START
 const SHELL = {
-  "release": "26778abaed3576390403",
+  "release": "75cab7412cc5c84d6297",
   "appName": "旅あるき",
   "assets": [
     {
@@ -18,6 +18,11 @@ const SHELL = {
       "path": "./assets/css/journey.css",
       "text": true,
       "sha256": "84c99cbb947634478609e896a68e76ae8b5636e6269d7dbd5b17852366a0eaf4"
+    },
+    {
+      "path": "./assets/css/readability.css",
+      "text": true,
+      "sha256": "11da21247e218f78d7e00e417ad92ee717c763a38bc05d67c5f0924e97a17d7f"
     },
     {
       "path": "./assets/icons/apple-touch-icon.png",
@@ -57,7 +62,7 @@ const SHELL = {
     {
       "path": "./index.html",
       "text": true,
-      "sha256": "a376b9db552b8d78d3d78ef1bef397588b62116baf7b45583809b277f1d72b9e"
+      "sha256": "fe5d27329f1bcb42f09a99e9b4ab28f9f18642f39054b76c42bfbb270f2b0d50"
     },
     {
       "path": "./manifest.webmanifest",
@@ -77,7 +82,7 @@ const SHELL = {
     {
       "path": "./src/app.js",
       "text": true,
-      "sha256": "f9dafc0dbdf6ae53f121e68692950d4067fc5362e8cf0e5a75f6ae7100214380"
+      "sha256": "f8359f3fa4124c4285b277d2a7b58032d3c6f4425d6833fb584f6d4fdfb598a2"
     },
     {
       "path": "./src/backup-dialog.js",
@@ -98,6 +103,11 @@ const SHELL = {
       "path": "./src/brand.js",
       "text": true,
       "sha256": "f1af19122f050d127b65afd509e123caed5cdf2ede8349a5bb7531064dbb722b"
+    },
+    {
+      "path": "./src/date-strip-scroll.js",
+      "text": true,
+      "sha256": "de24110f553c27edcb010e9ef8e0bdf7ffb3afb41e4c9217999fc4a32a265e1c"
     },
     {
       "path": "./src/file-export.js",

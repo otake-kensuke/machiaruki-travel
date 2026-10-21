@@ -1,0 +1,72 @@
+/* Step 7.1: type hierarchy and reflow only; keep the illustration and palette. */
+:root { font-size: 100%; --muted: #43585d; }
+body { overflow-wrap: anywhere; }
+small { font-size: .9375rem; }
+.brand small { font-size: .875rem; color: #365660; }
+.version { font-size: .875rem; }
+.muted, .trip-memo, .page-heading p, .day-heading p,
+.timeline-card p, .visit-inline p, .visit-inline .muted, .memory-memo,
+.travel-details p, .detail-card p, .welcome-card > p, .feature-card p,
+.review-overview p, .empty-card p, dialog p { font-size: 1rem; }
+.eyebrow, .data-management .eyebrow, .badge, .dashboard-heading > .badge,
+.sample-note, .info-note, .info-note.compact, .coordinates, .coordinates small,
+.agenda-hint, .itinerary-day small, .detail-count, .saved-note,
+.backup-panel > p, .backup-summary p, .backup-summary li, .backup-status,
+.backup-filename, .maps-network-note, .offline-panel p, .offline-panel summary,
+#offline-badge, .site-footer, .site-footer span, .trip-illustration figcaption,
+.date-strip small, .timeline-time > small, .home-date-picker label,
+.trip-picker, .sample-summary span { font-size: .9375rem; }
+.badge { white-space: normal; }
+.badge.neutral { color: #4d5748; }
+.sample-note { color: #604c2c; }
+.date-strip > a.selected small { color: #315c46; }
+.trip-illustration figcaption { background: #fffef9; color: #43585d; }
+.field-label, .gps-status, .check-field, .import-toolbar p,
+.data-management .import-toolbar strong, .agenda-empty,
+.offline-head strong, .dashboard-stats span { font-size: 1rem; }
+.dashboard-stats small { font-size: .9375rem; }
+.dashboard-stats > div { min-width: 0; }
+.dashboard-heading h2, .data-management .section-heading h2,
+.data-management .backup-panel h2, .detail-label { font-size: 1.25rem; }
+.agenda-row strong, .itinerary-day strong, .timeline-card h3,
+.memory-card h3, .detail-card h3 { font-size: 1.1875rem; }
+.visit-inline > div > .muted { font-size: 1.1875rem; font-weight: 650; color: var(--ink); }
+.travel-details .detail-card > p.muted { font-size: 1.125rem; }
+.trip-period, .day-label, .date-strip strong, .timeline-time > strong,
+.card-topline > strong, .visit-inline strong, .day-number { font-size: 1.125rem; font-weight: 700; }
+.agenda-row time { font-size: 1.125rem; font-weight: 650; color: #354c55; }
+.day-label { color: #43585d; }
+.day-heading h2, .section-heading h2 { font-size: 1.375rem; }
+.review-overview strong small { font-size: 1rem; }
+.button, .small-button, .backup-actions .button, .offline-panel .button,
+.timeline-actions .button, .visit-actions .button {
+  font-size: 1.0625rem; font-weight: 700; min-width: 44px; min-height: 48px;
+  max-width: 100%; white-space: normal; overflow-wrap: anywhere;
+}
+.bottom-nav > a { font-size: .9375rem; font-weight: 700; min-width: 0; min-height: 64px; text-align: center; }
+.bottom-nav { align-items: stretch; }
+/* Relative units follow browser text preferences; no maximum-scale or text-size-adjust lock. */
+.form-dialog input, .form-dialog select, .form-dialog textarea,
+.form-dialog input[type=file], .home-date-picker select, .trip-picker select { font-size: 1rem; }
+.form-dialog input[type=file]::file-selector-button { min-height: 44px; max-width: 100%; white-space: normal; }
+.check-field, .previous-backup summary, .offline-panel summary { min-height: 44px; }
+.check-field { padding: 8px 0; }
+.form-row { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.form-dialog h2 { padding-right: 32px; }
+.brand, .site-header, .dashboard-heading, .home-date-picker, .trip-picker,
+.day-heading, .card-topline, .section-heading, .trip-period, .travel-details > summary { flex-wrap: wrap; }
+.agenda-row { grid-template-columns: 32px 3.5rem minmax(0, 1fr); gap: 8px; }
+.timeline-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.timeline-time { flex: 0 0 4.5rem; padding-right: 10px; }
+.timeline-card { flex: 1 1 14rem; min-width: 0; }
+.timeline-actions .button, .visit-actions .button { min-width: 44px; }
+.home-date-picker select, .trip-picker select { max-width: 100%; }
+.date-strip { overflow-x: auto; overscroll-behavior-x: contain; }
+.date-strip > a { min-width: 7.5rem; min-height: 44px; }
+.date-strip strong { white-space: nowrap; }
+.notice { font-size: 1rem; bottom: calc(8rem + env(safe-area-inset-bottom)); }
+/* Reserve space for a wrapping fixed navigation, also with enlarged text. */
+.site-footer { margin-bottom: calc(8rem + env(safe-area-inset-bottom)); }
+@media (prefers-reduced-motion: reduce) {
+  .date-strip { scroll-behavior: auto; }
+}
