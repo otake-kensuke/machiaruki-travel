@@ -70,3 +70,15 @@ small { font-size: .9375rem; }
 @media (prefers-reduced-motion: reduce) {
   .date-strip { scroll-behavior: auto; }
 }
+
+/* UI v0.1: disclosure is presentation only; notes and save operations stay intact. */
+.trip-summary { line-height: 1.7; }
+.plan-memo { margin-top: 12px; border-top: 1px solid var(--line); }
+.plan-memo > summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-size: 1rem; font-weight: 700; color: var(--green); }
+.plan-memo > p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; }
+.backup-actions > .backup-method { flex: 1 1 14rem; min-width: 0; max-width: 100%; }
+.backup-method > .button { width: 100%; }
+.backup-method-note { font-size: .9375rem; margin: 8px 0 0; }
+@media (max-width: 700px) {
+  .backup-actions > .backup-method { flex: 0 1 auto; }
+}

@@ -30,8 +30,12 @@ export function openBackupDialog(onExported) {
   }
   function buttons(prepared, revision, purpose, prefix = '') {
     return el('div', { className: 'backup-actions' },
-      actionButton(`${prefix}JSONをダウンロード`, () => void run(prepared, revision, purpose, false)),
-      canShareFile(prepared) && actionButton(`${prefix}共有して「ファイル」に保存`, () => void run(prepared, revision, purpose, true), 'button secondary'));
+      el('div', { className: 'backup-method' },
+        actionButton(`${prefix}JSONをダウンロード`, () => void run(prepared, revision, purpose, false), 'button secondary'),
+        el('p', { className: 'muted backup-method-note' }, 'この端末へJSONファイルをダウンロードします。')),
+      canShareFile(prepared) && el('div', { className: 'backup-method' },
+        actionButton(`${prefix}共有して「ファイル」に保存`, () => void run(prepared, revision, purpose, true), 'button secondary'),
+        el('p', { className: 'muted backup-method-note' }, '共有画面から「ファイルに保存」を選びます。')));
   }
   void (async () => {
     try {

@@ -9,8 +9,7 @@ function illustration(trip) {
   return el('figure', { className: `trip-illustration ${theme}`, 'data-scenery': theme },
     el('div', { className: 'illustration-scene', 'aria-hidden': 'true' },
       el('img', { className: 'scenery-image', src: SCENERY[theme].image, width: 1536, height: 1024, alt: '', decoding: 'async' }),
-      el('span', { className: 'traveler man' }), el('span', { className: 'traveler woman' }), el('span', { className: 'traveler young' })),
-    el('figcaption', {}, SCENERY[theme].caption));
+      el('span', { className: 'traveler man' }), el('span', { className: 'traveler woman' }), el('span', { className: 'traveler young' })));
 }
 
 function management(context) {
@@ -73,7 +72,8 @@ export function homeScreen(context) {
         el('strong', {}, day.title || 'この日の予定'), el('small', {}, `${plans.filter(plan => plan.dayId === day.id).length}件の予定`)), icon('arrow')))) : el('p', { className: 'muted' }, '日別の予定はまだ登録されていません。'));
   return el('div', { className: 'dashboard' }, illustration(trip),
     el('section', { className: 'trip-intro' }, el('div', { 'data-trip-picker': '' }), trip.isSample && badge('サンプル・仮旅程', 'sample'),
-      el('h1', {}, trip.name), el('p', { className: 'trip-period' }, icon('calendar'), `${dateLabel(trip.startDate, { year: 'numeric' })} — ${dateLabel(trip.endDate)}`), trip.memo && el('p', { className: 'trip-memo' }, trip.memo)),
+      el('h1', {}, trip.name), el('p', { className: 'trip-period' }, icon('calendar'), `${dateLabel(trip.startDate, { year: 'numeric' })} — ${dateLabel(trip.endDate)}`),
+      el('p', { className: 'trip-memo trip-summary' }, `${tripDuration(trip)}日間・予定${plans.length}件`, el('br'), `交通${data.transportations.length}件・宿泊${data.accommodations.length}件`)),
     el('div', { className: 'dashboard-stats' }, [['calendar', '日程', tripDuration(trip), '日間'], ['list', '予定', plans.length, '件'], ['camera', '訪問記録', data.visits.length, '件']].map(([symbol, label, count, unit]) => el('div', {}, icon(symbol), el('span', {}, label), el('strong', {}, count, el('small', {}, unit))))),
     agenda, itinerary, travelDetails(data, trip),
     trip.isSample && el('p', { className: 'sample-note' }, 'サンプルの交通・宿泊・訪問は仮の情報です。実際の旅行計画ではありません。'),

@@ -239,3 +239,11 @@ package.json / .gitignore    開発用設定
 Step 7.1では、屋外で読む本文・施設名・日時の文字階層とコントラストを調整しました。予定・記録の日付タブは選択時に横方向だけ中央付近へ移動し、OSの動きを減らす設定を尊重します。データ形式と日付一覧の生成は変更していません。
 
 追加の表示検証は `node tests/step7-1-browser.mjs`（または `npm run test:step7-1`）です。既存ブラウザテストと同じPlaywright/Edge環境とローカルサーバーを使います。[変更内容・検証・iPhone実機確認項目](docs/step7-1-report.md)を参照してください。
+
+## UI改善v0.1（ローカル候補・Ownerレビュー待ち）
+
+ホームの説明は登録件数による短い概要にし、予定メモは「詳細メモ」で開閉します。原文データと保存形式は保持します。予約状態は自由文から推測せず、元のメモで確認します。バックアップの2方式は同じ控えめなボタンで用途を説明します。
+
+[実装・比較・検証・Release Gate](docs/ui-simplification-v01-report.md)。この候補はmainへ反映せず、公開更新にはOwnerの別途明示承認と両iPhoneの確認が必要です。
+
+追加検証は `node tests/ui-simplification-browser.mjs`（`npm run test:ui-v01`）。自己完結したローカルサーバーと新規テストプロファイルを使い、Playwright/Edgeが必要です。任意の `UI_PRIVATE_ITINERARY` にGit管理外のJSONの絶対パスを指定すると、DB/SWを使わないメモリ内の表示確認を行います。実旅程・比較画像をcommitしないでください。

@@ -15,7 +15,9 @@ export function timelineScreen({ trip, data, date, addPlan, editPlan, removePlan
     const details = el('div', { className: 'timeline-card' },
       el('div', { className: 'card-topline' }, badge(category), visits.length ? badge('訪問記録あり', 'visited') : badge('予定', 'neutral')),
       el('h3', {}, el('span', { className: 'place-symbol', 'aria-hidden': 'true' }, symbols[plan?.category] || '◇'), plan?.name || visits[0]?.name),
-      plan?.address && el('p', { className: 'muted' }, plan.address), plan?.memo && el('p', {}, plan.memo),
+      plan?.address && el('p', { className: 'muted' }, plan.address),
+      // Free-form notes are not a reliable booking-status field. Keep them intact.
+      plan?.memo?.trim() && el('details', { className: 'plan-memo' }, el('summary', {}, '詳細メモ'), el('p', {}, plan.memo)),
       visits.map(visit => inlineVisit(visit, trip, editVisit))
     );
     if (plan) {

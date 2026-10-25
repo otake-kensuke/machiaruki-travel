@@ -18,6 +18,7 @@
     "test:public": "node tests/public-site-browser.mjs",
     "test:step7": "node tests/step7-browser.mjs",
     "test:step7-1": "node tests/step7-1-browser.mjs",
+    "test:ui-v01": "node tests/ui-simplification-browser.mjs",
     "brand:update": "node scripts/update-brand.mjs",
     "brand:check": "node scripts/update-brand.mjs --check",
     "icons:render": "node scripts/render-icons.mjs"
