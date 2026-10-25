@@ -1,7 +1,7 @@
 // Generated asset hashes are refreshed with: node scripts/update-shell.mjs
 // SHELL_MANIFEST_START
 const SHELL = {
-  "release": "363945b1cfaac049d08c",
+  "release": "1763b45fdbebb937b17c",
   "appName": "旅あるき",
   "assets": [
     {
@@ -147,7 +147,7 @@ const SHELL = {
     {
       "path": "./src/offline.js",
       "text": true,
-      "sha256": "6c213577aa967f7b4afbf2a6a1a5e3f1e1fbc471eb112b287c4e76f9b6433ffa"
+      "sha256": "be5c528873e2646e958456a5f068c726b4916460159509b7c967a54c521e823e"
     },
     {
       "path": "./src/plan-dialog.js",

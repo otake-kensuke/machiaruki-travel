@@ -11,6 +11,7 @@
     "test:step4": "node tests/step4-browser.mjs",
     "test:step5": "node tests/step5-browser.mjs",
     "test:step6a": "node tests/step6a-browser.mjs",
+    "test:offline-update": "node tests/offline-update-browser.mjs",
     "cache:update": "node scripts/update-shell.mjs",
     "cache:check": "node scripts/update-shell.mjs --check",
     "audit:publication": "node scripts/audit-publication.mjs --publication",
